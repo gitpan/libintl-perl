@@ -1,10 +1,10 @@
-#! /usr/local/bin/perl -w # -*- perl -*-
+#! /usr/local/bin/perl -w
 
 # vim: tabstop=4
-# $Id: Makefile.PL,v 1.11 2003/08/19 18:38:29 guido Exp $
+# $Id: test.pl,v 1.1 2003/08/19 16:48:52 guido Exp $
 
-# Makefile generator for libintl-perl.
-# Copyright (C) 2002-2003 Guido Flohr <guido@imperia.net>, 
+# Portable character conversion for Perl.
+# Copyright (C) 2002-2003 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # Distribution either under the terms of the Artistic license (see
@@ -26,19 +26,23 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 
-use ExtUtils::MakeMaker;
+# This is a safe wrapper for systems that lack a POSIX shell or have
+# a too low limit on the length of the command line.
 
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
+use strict;
+use ExtUtils::Command::MM;
+use File::Basename;
+use Test::Harness;
 
-WriteMakefile(
-    NAME		    => 'libintl-perl',
-    VERSION_FROM	=> 'lib/Locale/TextDomain.pm',
-    PREREQ_PM		=> { ExtUtils::Command::MM => 0 },
-	AUTHOR          => 'Guido Flohr <guido@imperia.net>',
-    ABSTRACT        => 'Uniform message translation for Perl',
-	PL_FILES        => {},
-);
+my $here = dirname ($0);
+my $test_dir = $here . '/tests';
+my @lib_dirs = ($here . '/blib/lib', $here . '/blib/arch');
+local *DIR;
+opendir DIR, $test_dir or die "cannot open test directory '$test_dir': $!";
+@ARGV = sort map $test_dir . '/' . $_, grep /\.t$/, readdir DIR;
+closedir DIR;
+
+test_harness ($ENV{TEST_HARNESS} || 0, @lib_dirs);
 
 __END__
 
@@ -54,3 +58,4 @@ cperl-indent-level: 4
 cperl-continued-statement-offset: 2
 tab-width: 4
 End:
+
