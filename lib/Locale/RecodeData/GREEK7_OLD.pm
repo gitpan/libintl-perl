@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: GREEK7_OLD.pm,v 1.8 2004/01/08 17:25:58 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: GREEK7_OLD.pm,v 1.10 2004/06/11 11:06:09 guido Exp $
 
 # Conversion routines for GREEK7-OLD.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -702,7 +702,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::GREEK7_OLD
+Locale::RecodeData::GREEK7_OLD - Conversion routines for GREEK7_OLD
 
 =head1 SYNOPSIS
 

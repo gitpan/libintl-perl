@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: IBM870.pm,v 1.8 2004/01/08 17:25:59 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: IBM870.pm,v 1.10 2004/06/11 11:06:10 guido Exp $
 
 # Conversion routines for IBM870.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -820,7 +820,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::IBM870
+Locale::RecodeData::IBM870 - Conversion routines for IBM870
 
 =head1 SYNOPSIS
 

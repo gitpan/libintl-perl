@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: KOI8_RU.pm,v 1.5 2004/01/08 17:25:59 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: KOI8_RU.pm,v 1.7 2004/06/11 11:06:10 guido Exp $
 
 # Conversion routines for KOI8-RU.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -831,7 +831,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::KOI8_RU
+Locale::RecodeData::KOI8_RU - Conversion routines for KOI8-RU
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: ISO_5427.pm,v 1.8 2004/01/08 17:25:59 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: ISO_5427.pm,v 1.10 2004/06/11 11:06:10 guido Exp $
 
 # Conversion routines for ISO_5427.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -703,7 +703,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::ISO_5427
+Locale::RecodeData::ISO_5427 - Conversion routines for ISO_5427
 
 =head1 SYNOPSIS
 

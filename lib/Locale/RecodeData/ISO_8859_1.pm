@@ -1,6 +1,6 @@
 #! /bin/false
 
-# vim: tabstop=4
+# vim: set autoindent shiftwidth=4 tabstop=4:
 
 # Conversion routines for ISO-8859-1.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
@@ -309,7 +309,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::ISO_8859_1
+Locale::RecodeData::ISO_8859_1 - Conversion routines for ISO-8859-1
 
 =head1 SYNOPSIS
 

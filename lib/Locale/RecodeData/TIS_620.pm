@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: TIS_620.pm,v 1.8 2004/01/08 17:26:00 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: TIS_620.pm,v 1.10 2004/06/11 11:06:10 guido Exp $
 
 # Conversion routines for TIS-620.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -790,7 +790,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::TIS_620
+Locale::RecodeData::TIS_620 - Conversion routines for TIS-620
 
 =head1 SYNOPSIS
 

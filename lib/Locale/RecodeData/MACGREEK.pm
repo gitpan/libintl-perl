@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: MACGREEK.pm,v 1.5 2004/01/08 17:25:59 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: MACGREEK.pm,v 1.7 2004/06/11 11:06:10 guido Exp $
 
 # Conversion routines for MACGREEK.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -830,7 +830,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::MACGREEK
+Locale::RecodeData::MACGREEK - Conversion routines for MACGREEK
 
 =head1 SYNOPSIS
 

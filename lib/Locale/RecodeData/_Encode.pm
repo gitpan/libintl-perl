@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: _Encode.pm,v 1.7 2004/01/08 17:26:00 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: _Encode.pm,v 1.9 2004/06/11 11:06:10 guido Exp $
 
 # Interface to Encode.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
@@ -58,7 +58,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::_Encode
+Locale::RecodeData::_Encode - Internal wrapper around Encode 
 
 =head1 SYNOPSIS
 

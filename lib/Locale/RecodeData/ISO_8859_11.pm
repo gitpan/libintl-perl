@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: ISO_8859_11.pm,v 1.8 2004/01/08 17:25:59 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: ISO_8859_11.pm,v 1.10 2004/06/11 11:06:10 guido Exp $
 
 # Conversion routines for ISO-8859-11.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -791,7 +791,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::ISO_8859_11
+Locale::RecodeData::ISO_8859_11 - Conversion routines for ISO-8859-11
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: LATIN_GREEK.pm,v 1.8 2004/01/08 17:25:59 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: LATIN_GREEK.pm,v 1.10 2004/06/11 11:06:10 guido Exp $
 
 # Conversion routines for LATIN-GREEK.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -702,7 +702,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::LATIN_GREEK
+Locale::RecodeData::LATIN_GREEK - Conversion routines for LATIN_GREEK
 
 =head1 SYNOPSIS
 

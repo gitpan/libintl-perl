@@ -1,6 +1,6 @@
 #! /bin/false
-# vim: tabstop=4
-# $Id: EBCDIC_CA_FR.pm,v 1.8 2004/01/08 17:25:58 guido Exp $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: EBCDIC_CA_FR.pm,v 1.10 2004/06/11 11:06:09 guido Exp $
 
 # Conversion routines for EBCDIC-CA-FR.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, all
@@ -756,7 +756,7 @@ __END__
 
 =head1 NAME
 
-Locale::RecodeData::EBCDIC_CA_FR
+Locale::RecodeData::EBCDIC_CA_FR - Conversion routines for EBCDIC_CA_FR
 
 =head1 SYNOPSIS
 

@@ -1,3 +1,149 @@
+2004-06-11 13:13  Guido Flohr <guido@imperia.net>
+
+	* META.yml, lib/Locale/Messages.pm, lib/Locale/TextDomain.pm: 
+	bumped version number to 1.11 
+
+2004-06-11 13:06  Guido Flohr <guido@imperia.net>
+
+	* lib/Locale/RecodeData/: ASMO_449.pm, ATARI_ST.pm,
+	ATARI_ST_EURO.pm, CP10007.pm, CP1250.pm, CP1251.pm, CP1252.pm,
+	CP1253.pm, CP1254.pm, CP1256.pm, CP1257.pm, CSN_369103.pm, CWI.pm,
+	DEC_MCS.pm, EBCDIC_AT_DE.pm, EBCDIC_AT_DE_A.pm, EBCDIC_CA_FR.pm,
+	EBCDIC_DK_NO.pm, EBCDIC_DK_NO_A.pm, EBCDIC_ES.pm, EBCDIC_ES_A.pm,
+	EBCDIC_ES_S.pm, EBCDIC_FI_SE.pm, EBCDIC_FI_SE_A.pm, EBCDIC_FR.pm,
+	EBCDIC_IS_FRISS.pm, EBCDIC_IT.pm, EBCDIC_PT.pm, EBCDIC_UK.pm,
+	EBCDIC_US.pm, ECMA_CYRILLIC.pm, GEORGIAN_ACADEMY.pm,
+	GEORGIAN_PS.pm, GOST_19768_74.pm, GREEK7.pm, GREEK7_OLD.pm,
+	GREEK_CCITT.pm, HP_ROMAN8.pm, IBM037.pm, IBM038.pm, IBM1004.pm,
+	IBM1026.pm, IBM1047.pm, IBM256.pm, IBM273.pm, IBM274.pm, IBM275.pm,
+	IBM277.pm, IBM278.pm, IBM280.pm, IBM281.pm, IBM284.pm, IBM285.pm,
+	IBM290.pm, IBM297.pm, IBM420.pm, IBM423.pm, IBM424.pm, IBM437.pm,
+	IBM500.pm, IBM850.pm, IBM851.pm, IBM852.pm, IBM855.pm, IBM857.pm,
+	IBM860.pm, IBM861.pm, IBM862.pm, IBM863.pm, IBM864.pm, IBM865.pm,
+	IBM866.pm, IBM868.pm, IBM869.pm, IBM870.pm, IBM871.pm, IBM874.pm,
+	IBM875.pm, IBM880.pm, IBM891.pm, IBM903.pm, IBM904.pm, IBM905.pm,
+	IBM918.pm, IEC_P27_1.pm, INIS.pm, INIS_8.pm, INIS_CYRILLIC.pm,
+	ISO_10367_BOX.pm, ISO_2033_1983.pm, ISO_5427.pm, ISO_5427_EXT.pm,
+	ISO_5428.pm, ISO_8859_1.pm, ISO_8859_10.pm, ISO_8859_11.pm,
+	ISO_8859_13.pm, ISO_8859_14.pm, ISO_8859_15.pm, ISO_8859_16.pm,
+	ISO_8859_2.pm, ISO_8859_3.pm, ISO_8859_4.pm, ISO_8859_5.pm,
+	ISO_8859_6.pm, ISO_8859_7.pm, ISO_8859_8.pm, ISO_8859_9.pm,
+	KOI8_R.pm, KOI8_RU.pm, KOI8_T.pm, KOI8_U.pm, KOI_8.pm,
+	LATIN_GREEK.pm, LATIN_GREEK_1.pm, MACARABIC.pm, MACCROATIAN.pm,
+	MACCYRILLIC.pm, MACGREEK.pm, MACHEBREW.pm, MACICELAND.pm,
+	MACINTOSH.pm, MACROMANIA.pm, MACTHAI.pm, MACTURKISH.pm,
+	MACUKRAINE.pm, MAC_IS.pm, MAC_SAMI.pm, MAC_UK.pm, NATS_DANO.pm,
+	NATS_SEFI.pm, NEXTSTEP.pm, SAMI_WS2.pm, TIS_620.pm, US_ASCII.pm,
+	UTF_8.pm, VISCII.pm, _Encode.pm: added proper headlines for manual
+	pages 
+
+2004-06-11 12:54  Guido Flohr <guido@imperia.net>
+
+	* lib/Locale/TextDomain.pm: 
+	- add default directories /usr/share/locale resp.
+	  /usr/local/share/locale to search path if they exist (reported by
+	Cao Hongija) 
+	- changed default textdomain to 'messages' 
+	- fixed warning that occured when the import() method is not
+	  properly called 
+
+2004-04-20 18:38  Guido Flohr <guido@imperia.net>
+
+	* lib/Locale/: Messages.pm, Recode.pm, RecodeData.pm,
+	TextDomain.pm, gettext_pp.pm, gettext_xs.pod, Recode/_Aliases.pm,
+	Recode/_Conversions.pm, RecodeData/ASMO_449.pm,
+	RecodeData/ATARI_ST.pm, RecodeData/ATARI_ST_EURO.pm,
+	RecodeData/CP10007.pm, RecodeData/CP1250.pm, RecodeData/CP1251.pm,
+	RecodeData/CP1252.pm, RecodeData/CP1253.pm, RecodeData/CP1254.pm,
+	RecodeData/CP1256.pm, RecodeData/CP1257.pm,
+	RecodeData/CSN_369103.pm, RecodeData/CWI.pm, RecodeData/DEC_MCS.pm,
+	RecodeData/EBCDIC_AT_DE.pm, RecodeData/EBCDIC_AT_DE_A.pm,
+	RecodeData/EBCDIC_CA_FR.pm, RecodeData/EBCDIC_DK_NO.pm,
+	RecodeData/EBCDIC_DK_NO_A.pm, RecodeData/EBCDIC_ES.pm,
+	RecodeData/EBCDIC_ES_A.pm, RecodeData/EBCDIC_ES_S.pm,
+	RecodeData/EBCDIC_FI_SE.pm, RecodeData/EBCDIC_FI_SE_A.pm,
+	RecodeData/EBCDIC_FR.pm, RecodeData/EBCDIC_IS_FRISS.pm,
+	RecodeData/EBCDIC_IT.pm, RecodeData/EBCDIC_PT.pm,
+	RecodeData/EBCDIC_UK.pm, RecodeData/EBCDIC_US.pm,
+	RecodeData/ECMA_CYRILLIC.pm, RecodeData/GEORGIAN_ACADEMY.pm,
+	RecodeData/GEORGIAN_PS.pm, RecodeData/GOST_19768_74.pm,
+	RecodeData/GREEK7.pm, RecodeData/GREEK7_OLD.pm,
+	RecodeData/GREEK_CCITT.pm, RecodeData/HP_ROMAN8.pm,
+	RecodeData/IBM037.pm, RecodeData/IBM038.pm, RecodeData/IBM1004.pm,
+	RecodeData/IBM1026.pm, RecodeData/IBM1047.pm, RecodeData/IBM256.pm,
+	RecodeData/IBM273.pm, RecodeData/IBM274.pm, RecodeData/IBM275.pm,
+	RecodeData/IBM277.pm, RecodeData/IBM278.pm, RecodeData/IBM280.pm,
+	RecodeData/IBM281.pm, RecodeData/IBM284.pm, RecodeData/IBM285.pm,
+	RecodeData/IBM290.pm, RecodeData/IBM297.pm, RecodeData/IBM420.pm,
+	RecodeData/IBM423.pm, RecodeData/IBM424.pm, RecodeData/IBM437.pm,
+	RecodeData/IBM500.pm, RecodeData/IBM850.pm, RecodeData/IBM851.pm,
+	RecodeData/IBM852.pm, RecodeData/IBM855.pm, RecodeData/IBM857.pm,
+	RecodeData/IBM860.pm, RecodeData/IBM861.pm, RecodeData/IBM862.pm,
+	RecodeData/IBM863.pm, RecodeData/IBM864.pm, RecodeData/IBM865.pm,
+	RecodeData/IBM866.pm, RecodeData/IBM868.pm, RecodeData/IBM869.pm,
+	RecodeData/IBM870.pm, RecodeData/IBM871.pm, RecodeData/IBM874.pm,
+	RecodeData/IBM875.pm, RecodeData/IBM880.pm, RecodeData/IBM891.pm,
+	RecodeData/IBM903.pm, RecodeData/IBM904.pm, RecodeData/IBM905.pm,
+	RecodeData/IBM918.pm, RecodeData/IEC_P27_1.pm, RecodeData/INIS.pm,
+	RecodeData/INIS_8.pm, RecodeData/INIS_CYRILLIC.pm,
+	RecodeData/ISO_10367_BOX.pm, RecodeData/ISO_2033_1983.pm,
+	RecodeData/ISO_5427.pm, RecodeData/ISO_5427_EXT.pm,
+	RecodeData/ISO_5428.pm, RecodeData/ISO_8859_1.pm,
+	RecodeData/ISO_8859_10.pm, RecodeData/ISO_8859_11.pm,
+	RecodeData/ISO_8859_13.pm, RecodeData/ISO_8859_14.pm,
+	RecodeData/ISO_8859_15.pm, RecodeData/ISO_8859_16.pm,
+	RecodeData/ISO_8859_2.pm, RecodeData/ISO_8859_3.pm,
+	RecodeData/ISO_8859_4.pm, RecodeData/ISO_8859_5.pm,
+	RecodeData/ISO_8859_6.pm, RecodeData/ISO_8859_7.pm,
+	RecodeData/ISO_8859_8.pm, RecodeData/ISO_8859_9.pm,
+	RecodeData/KOI8_R.pm, RecodeData/KOI8_RU.pm, RecodeData/KOI8_T.pm,
+	RecodeData/KOI8_U.pm, RecodeData/KOI_8.pm,
+	RecodeData/LATIN_GREEK.pm, RecodeData/LATIN_GREEK_1.pm,
+	RecodeData/MACARABIC.pm, RecodeData/MACCROATIAN.pm,
+	RecodeData/MACCYRILLIC.pm, RecodeData/MACGREEK.pm,
+	RecodeData/MACHEBREW.pm, RecodeData/MACICELAND.pm,
+	RecodeData/MACINTOSH.pm, RecodeData/MACROMANIA.pm,
+	RecodeData/MACTHAI.pm, RecodeData/MACTURKISH.pm,
+	RecodeData/MACUKRAINE.pm, RecodeData/MAC_IS.pm,
+	RecodeData/MAC_SAMI.pm, RecodeData/MAC_UK.pm,
+	RecodeData/NATS_DANO.pm, RecodeData/NATS_SEFI.pm,
+	RecodeData/NEXTSTEP.pm, RecodeData/SAMI_WS2.pm,
+	RecodeData/TIS_620.pm, RecodeData/US_ASCII.pm, RecodeData/UTF_8.pm,
+	RecodeData/VISCII.pm, RecodeData/_Encode.pm: fixed vim line 
+
+2004-01-15 14:50  Guido Flohr <guido@imperia.net>
+
+	* sample/simplecal/po/Crypt-Twofish_PP.pot: Oops...  
+
+2004-01-12 13:27  Guido Flohr <guido@imperia.net>
+
+	* META.yml: removed dynamic_config (not recognized?) 
+
+2004-01-12 13:26  Guido Flohr <guido@imperia.net>
+
+	* META.yml: added dynamic_config 
+
+2004-01-12 13:09  Guido Flohr <guido@imperia.net>
+
+	* README.win32: added statement by Bruno Haible regarding MSVC 7.0 
+
+2004-01-12 13:08  Guido Flohr <guido@imperia.net>
+
+	* MANIFEST: added README.win32 
+
+2004-01-12 13:07  Guido Flohr <guido@imperia.net>
+
+	* README.win32: new 
+
+2004-01-12 13:04  Guido Flohr <guido@imperia.net>
+
+	* lib/Locale/Messages.pm: fixed typo 
+
+2004-01-12 13:03  Guido Flohr <guido@imperia.net>
+
+	* ChangeLog, META.yml, NEWS, lib/Locale/Messages.pm,
+	lib/Locale/TextDomain.pm: bumped version number to 1.10 
+
 2004-01-12 12:17  Guido Flohr <guido@imperia.net>
 
 	* tests/: 03language_pp.t, 03language_xs.t: $LANG must be set in
