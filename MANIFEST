@@ -1,10 +1,12 @@
-COPYING.LIB
+COPYING.LESSER
 ChangeLog
 MANIFEST			This list of files
+META.yml
 Makefile.PL
 MyInstall.pm
 NEWS
 README
+README.win32
 THANKS
 TODO
 gettext_xs/Makefile.PL
@@ -351,12 +353,13 @@ tests/03ngettext_pp.t
 tests/03ngettext_xs.t
 tests/03textdomain_pp.t
 tests/03textdomain_xs.t
-tests/locale/de/LC_MESSAGES/additional.mo
-tests/locale/de/LC_MESSAGES/existing.mo
-tests/locale/de_AT/LC_MESSAGES/additional.mo
-tests/locale/de_AT/LC_MESSAGES/existing.mo
+tests/LocaleData/de/LC_MESSAGES/additional.mo
+tests/LocaleData/de/LC_MESSAGES/existing.mo
+tests/LocaleData/de_AT/LC_MESSAGES/additional.mo
+tests/LocaleData/de_AT/LC_MESSAGES/existing.mo
 tests/po/Makefile
 tests/po/additional.de.po
 tests/po/additional.de_AT.po
 tests/po/existing.de.po
 tests/po/existing.de_AT.po
+META.yml                                Module meta-data (added by MakeMaker)

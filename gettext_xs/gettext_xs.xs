@@ -1,8 +1,8 @@
 /* -*- C -*- */
-/* $Id: gettext_xs.xs,v 1.2 2003/10/10 15:38:09 guido Exp $ */
+/* $Id: gettext_xs.xs,v 1.7 2004/01/12 11:15:43 guido Exp $ */
 /*
 # Perl binding for Uniforum message translation.
-# Copyright (C) 2002-2003 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -24,6 +24,8 @@
 #include "perl.h"
 #include "XSUB.h"
 #include <string.h>
+#include <locale.h>
+#include <libintl.h>
 
 MODULE = Locale::gettext_xs	PACKAGE = Locale::gettext_xs
 
@@ -166,8 +168,23 @@ textdomain (domain)
     OUTPUT:
 	RETVAL
 
+# This function is a no-op except for MS-DOS with its completely 
+# brain-damaged environment interface.
+int
+_nl_putenv (str)
+        char* str
+    PROTOTYPE: $
+    CODE:
+#if defined (WIN32)
+        RETVAL = _putenv (str);
+#else
+        RETVAL = 0;
+#endif
+    OUTPUT:
+        RETVAL
+        
 char*
-bindtextdomain (domain = NULL, dirname = NULL)
+_bindtextdomain (domain = NULL, dirname = NULL)
 	char* domain
 	char* dirname
     PROTOTYPE: $;$

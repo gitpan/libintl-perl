@@ -11,6 +11,7 @@ use constant NUM_TESTS => 9;
 
 use Locale::Messages qw (bindtextdomain dcgettext LC_MESSAGES);
 require POSIX;
+require File::Spec;
 
 BEGIN {
 	my $package;
@@ -30,18 +31,23 @@ BEGIN {
 
 my $locale_dir = $0;
 $locale_dir =~ s,[^\\/]+$,, or $locale_dir = '.';
-$locale_dir .= '/locale';
+$locale_dir .= '/LocaleData';
 
-$ENV{LANGUAGE} = $ENV{LC_ALL} = $ENV{LANG} = $ENV{LC_MESSAGES} = 'de_AT';
-delete $ENV{OUTPUT_CHARSET};
+Locale::Messages::nl_putenv ("LANGUAGE=de_AT");
+Locale::Messages::nl_putenv ("LC_ALL=de_AT");
+Locale::Messages::nl_putenv ("LANG=de_AT");
+Locale::Messages::nl_putenv ("LC_MESSAGES=de_AT");
+Locale::Messages::nl_putenv ("OUTPUT_CHARSET=iso-8859-1");
 
-POSIX::setlocale (POSIX::LC_ALL() => 'de_AT');
+POSIX::setlocale (POSIX::LC_ALL() => '');
 
 my $bound_dir = bindtextdomain existing => $locale_dir;
-ok defined $bound_dir && $locale_dir eq $bound_dir;
+ok defined $bound_dir &&
+	File::Spec->catdir ($locale_dir) eq File::Spec->catdir ($bound_dir);
 
 $bound_dir = bindtextdomain additional => $locale_dir;
-ok defined $bound_dir && $locale_dir eq $bound_dir;
+ok defined $bound_dir &&
+	File::Spec->catdir ($locale_dir) eq File::Spec->catdir ($bound_dir);
 
 ok 'Dezember' eq dcgettext (existing => 'December', LC_MESSAGES);
 ok  'September' eq dcgettext (existing => 'September', LC_MESSAGES);

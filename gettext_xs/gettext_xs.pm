@@ -1,10 +1,10 @@
 #! /bin/false
 
 # vim: tabstop=4
-# $Id: gettext_xs.pm,v 1.1 2003/09/15 08:21:46 guido Exp $
+# $Id: gettext_xs.pm,v 1.5 2004/01/08 19:12:10 guido Exp $
 
 # Pure Perl implementation of Uniforum message translation.
-# Copyright (C) 2002-2003 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -63,6 +63,7 @@ use vars qw (%EXPORT_TAGS @EXPORT_OK @ISA);
 				 textdomain
 				 bindtextdomain
 				 bind_textdomain_codeset
+                                 nl_putenv
 				 LC_CTYPE
 				 LC_NUMERIC
 				 LC_TIME
@@ -73,6 +74,51 @@ use vars qw (%EXPORT_TAGS @EXPORT_OK @ISA);
 @ISA = qw (Exporter DynaLoader);
 
 bootstrap Locale::gettext_xs;
+
+require File::Spec;
+
+# Wrapper function that converts Perl paths to 
+sub bindtextdomain ($;$)
+{
+	my ($domain, $directory) = @_;
+
+	if (defined $domain && length $domain && 
+		defined $directory && length $directory) {
+		return Locale::gettext_xs::_bindtextdomain 
+			($domain, File::Spec->catdir ($directory));
+	} else {
+		return &Locale::gettext_xs::_bindtextdomain;
+	}
+}
+
+sub nl_putenv ($)
+{
+    my ($envspec) = @_;
+    
+    return unless defined $envspec;
+    return unless length $envspec;
+    return if substr ($envspec, 0, 1) eq '=';
+    
+    my ($var, $value) = split /=/, $envspec, 2;
+    
+    if ($^O eq 'MSWin32') {
+        $value = '' unless defined $value;
+        return unless Locale::gettext_xs::_nl_putenv ("$var=$value") == 0;
+        if (length $value) {
+            $ENV{$var} = $value;
+        } else {
+            delete $ENV{$var};
+        }
+    } else {
+        if (defined $value) {
+            $ENV{$var} = $value;
+        } else {
+            delete $ENV{$var};
+        }
+    }
+
+    return 1;
+}
 
 1;
 

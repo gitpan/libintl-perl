@@ -1,10 +1,10 @@
 #! /bin/false
 
 # vim: tabstop=4
-# $Id: gettext_pp.pm,v 1.28 2003/12/29 19:00:19 guido Exp $
+# $Id: gettext_pp.pm,v 1.32 2004/01/08 19:49:23 guido Exp $
 
 # Pure Perl implementation of Uniforum message translation.
-# Copyright (C) 2002-2003 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -151,6 +151,7 @@ use vars qw (%EXPORT_TAGS @EXPORT_OK @ISA $VERSION);
 				 textdomain
 				 bindtextdomain
 				 bind_textdomain_codeset
+                 nl_putenv
 				 LC_CTYPE
 				 LC_NUMERIC
 				 LC_TIME
@@ -379,6 +380,36 @@ sub dcngettext($$$$$)
 	}
 	
 	return $trans;
+}
+
+sub nl_putenv ($)
+{
+    my ($envspec) = @_;
+    return unless defined $envspec;
+    return unless length $envspec;
+    return if substr ($envspec, 0, 1) eq '=';
+    
+    my ($var, $value) = split /=/, $envspec, 2;
+
+    # In Perl we *could* set empty environment variables even under
+    # MS-DOS, but for compatibility reasons, we implement the
+    # brain-damaged behavior of the Microsoft putenv().
+    if ($^O eq 'MSWin32') {
+        $value = '' unless defined $value;
+        if (length $value) {
+            $ENV{$var} = $value;
+        } else {
+            delete $ENV{$var};
+        }
+    } else {
+        if (defined $value) {
+            $ENV{$var} = $value;
+        } else {
+            delete $ENV{$var};
+        }
+    }
+
+    return 1;
 }
 
 sub __load_domain
@@ -769,6 +800,10 @@ See L<Locale::Messages/FUNCTIONS>.
 
 =item B<bind_textdomain_codeset TEXTDOMAIN, ENCODING>
 
+=item B<nl_putenv ENVSPEC>
+
+See L<Locale::Messages/FUNCTIONS>.
+
 =back
 
 =head1 CONSTANTS
@@ -856,7 +891,7 @@ Imports the locale category constants:
 
 =head1 AUTHOR
 
-Copyright (C) 2002-2003, Guido Flohr E<lt>guido@imperia.netE<gt>, all
+Copyright (C) 2002-2004, Guido Flohr E<lt>guido@imperia.netE<gt>, all
 rights reserved.  See the source code for details.
 
 This software is contributed to the Perl community by Imperia 
