@@ -1,7 +1,7 @@
 #! /bin/false
 
 # vim: tabstop=4
-# $Id: gettext_pp.pm,v 1.18 2003/08/07 10:56:21 guido Exp $
+# $Id: gettext_pp.pm,v 1.21 2003/09/04 16:05:20 ingrid Exp $
 
 # Pure Perl implementation of Uniforum message translation.
 # Copyright (C) 2002-2003 Guido Flohr <guido@imperia.net>,
@@ -213,15 +213,20 @@ sub textdomain(;$)
 sub bindtextdomain($;$)
 {
 	my ($domain, $directory) = @_;
-	
+
+	my $retval;	
 	if (defined $domain && length $domain) {
 		if (defined $directory && length $directory) {
-			return $__gettext_pp_domain_bindings->{$domain} = $directory;
+			$retval = $__gettext_pp_domain_bindings->{$domain} 
+				= $directory;
 		} elsif (exists $__gettext_pp_domain_bindings->{$domain}) {
-			return $__gettext_pp_domain_bindings->{$domain};
+			$retval = $__gettext_pp_domain_bindings->{$domain};
 		} else {
-			return $__gettext_pp_default_dir;
+			$retval = $__gettext_pp_default_dir;
 		}
+		$retval = '/usr/share/locale' unless defined $retval && 
+			length $retval;
+		return $retval;
 	} else {
 		return;
 	}
@@ -548,14 +553,14 @@ sub __load_catalog
 	my $code = $domain->{po_header}->{plural_forms} || '';
 	
 	# Whitespace, locale-independent.
-	my $s = qr/[ \t\r\n\013\014]*/o;
+	my $s = '[ \t\r\n\013\014]';
 	
 	# Untaint the plural header.
-	if ($code =~ m{^($s
-					 nplurals$s=$s[0-9]+
-					 $s;$s
-					 plural$s=$s
-					 (?:.|$s|[-n\?\|\&=!<>+*/\%:;0-9\(\)])+
+	# Keep line breaks as is (Perl 5_005 compatibility).
+	if ($code =~ m{^($s*
+					 nplurals$s*=$s*[0-9]+
+					 $s*;$s*
+					 plural$s*=$s*(?:$s|[-\?\|\&=!<>+*/\%:;a-zA-Z0-9_\(\)])+
 					 )}xms) {
 		$domain->{po_header}->{plural_forms} = $1;
 	} else {
@@ -571,7 +576,6 @@ sub __load_catalog
 		my $code = ' ' . $domain->{po_header}->{plural_forms} . ' ';
 		$code =~ 
 			s/([^_a-zA-Z0-9])([_a-z][_A-Za-z0-9]*)([^_a-zA-Z0-9])/$1\$$2$3/g;
-		$code =~ s/\`\s//g;
 		
 		$code = "sub { my \$n = shift; 
 				   my (\$plural, \$nplurals); 
