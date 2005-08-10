@@ -1,7 +1,7 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: TextDomain.pm,v 1.28 2004/06/11 11:13:37 guido Exp $
+# $Id: TextDomain.pm,v 1.31 2005/08/10 21:08:17 guido Exp $
 
 # High-level interface to Perl i18n.
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
@@ -64,11 +64,11 @@ package Locale::TextDomain;
 
 use strict;
 
-use Locale::Messages qw (bindtextdomain dgettext dngettext);
+use Locale::Messages qw (textdomain bindtextdomain dgettext dngettext);
 
 use vars qw ($VERSION);
 
-$VERSION = '1.11';
+$VERSION = '1.12';
 
 require Exporter;
 
@@ -213,7 +213,7 @@ sub import
     return if exists $textdomains{$package};
     
     # Was a textdomain specified?
-    $textdomain = 'messages' unless defined $textdomain && length $textdomain;
+	$textdomain = textdomain unless defined $textdomain && length $textdomain;
     
     # Remember the textdomain of that package.
     $textdomains{$package} = $textdomain;
@@ -239,21 +239,32 @@ sub __find_domain ($)
 	my $try_dirs = $bound_dirs{$domain};
 	
 	if (defined $try_dirs) {
-		my $empty = '';
-		my $msgstr = '';
-		foreach my $dir (@$try_dirs) {
-			bindtextdomain $domain => $dir;
-			
-			# Try to read the PO-header as a check.  If you can think
-			# of something less dirty, let me know ...
-			$msgstr = dgettext $domain => $empty;
-			
-			last if length $msgstr;
+		my $found_dir = '';
+		
+		TRYDIR: foreach my $dir (@$try_dirs) {
+			# Is there a message catalog?  We have to search recursively
+			# for it.  Since globbing is reported to be buggy under
+			# MS-DOS, we roll our own version.
+			local *DIR;
+			if (opendir DIR, $dir) {
+				my @files = map { "$dir/$_/LC_MESSAGES/$domain.mo" } 
+					grep { ! /^\.\.?$/ } readdir DIR;
+
+				foreach my $file (@files) {
+					if (-f $file || -l $file) {
+						# If we find a non-readable file on our way,
+						# we access has been disabled on purpose.
+						# Therefore no -r check here.
+						$found_dir = $dir;
+						last TRYDIR;
+					}
+				}
+			}
 		}
 		
-		# If there was no success, fall back to the default search
+		# If there was no success, this will fall back to the default search
 		# directories.
-		bindtextdomain $domain => '' unless length $msgstr;
+		bindtextdomain $domain => $found_dir;
     }
     
     # The search has completed.
@@ -319,7 +330,8 @@ When your request a translation for a given string, the system used
 in libintl-perl follows a standard strategy to find a suitable message
 catalog containing the translation: Unless you explicitely define
 a name for the message catalog, libintl-perl will assume that your
-catalog is called 'messages'.
+catalog is called 'messages' (unless you have changed the default
+value to something else via Locale::Messages(3pm), method textdomain()).
 
 You might think that his default strategy leaves room for optimization
 and you are right.  It would be a lot smarter if multiple software
