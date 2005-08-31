@@ -26,6 +26,11 @@
 #include <string.h>
 #include <locale.h>
 #include <libintl.h>
+/* Handle the case that we link against GNU libintl but include a non
+ * GNU libintl.h.  */
+#ifndef __USE_GNU_GETTEXT
+# error "<libintl.h> is not GNU gettext.  Maybe you have to adjust your include path."
+#endif
 
 MODULE = Locale::gettext_xs	PACKAGE = Locale::gettext_xs
 
