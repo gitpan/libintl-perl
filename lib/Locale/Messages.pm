@@ -1,7 +1,7 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: Messages.pm,v 1.27 2005/08/21 15:38:30 guido Exp $
+# $Id: Messages.pm,v 1.32 2005/09/27 23:29:38 guido Exp $
 
 # Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
@@ -10,12 +10,12 @@
 # under the terms of the GNU Library General Public License as published
 # by the Free Software Foundation; either version 2, or (at your option)
 # any later version.
-                                                                                
+
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Library General Public License for more details.
-                                                                                
+
 # You should have received a copy of the GNU Library General Public 
 # License along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
@@ -29,15 +29,19 @@ use vars qw ($package @EXPORT_OK %EXPORT_TAGS @ISA);
 
 # Try to load the C version first.
 $package = 'gettext_xs';
+my $can_xs = 1;
 eval <<'EOF';
 require Locale::gettext_xs; 
 my $version = Locale::gettext_xs::__gettext_xs_version();
-die "Version: $version mismatch (1.15 vs. $version)" unless $version eq '1.15';
+die "Version: $version mismatch (1.16 vs. $version)" unless $version eq '1.16';
 EOF
 if ($@) {
     $package = 'gettext_pp';
+	undef $can_xs;
     require Locale::gettext_pp;
 }
+		
+my %filters = ();
 
 require Exporter;
 @ISA = qw (Exporter);
@@ -62,24 +66,27 @@ require Exporter;
 				],
 		 );
 
-@EXPORT_OK = qw (select_package turn_utf_8_off
-		 gettext
-		 dgettext
-		 dcgettext
-		 ngettext
-		 dngettext
-		 dcngettext
-		 textdomain
-		 bindtextdomain
-		 bind_textdomain_codeset
+@EXPORT_OK = qw (select_package
+				 turn_utf_8_on
+				 turn_utf_8_off
+				 gettext
+				 dgettext
+				 dcgettext
+				 ngettext
+				 dngettext
+				 dcngettext
+				 textdomain
+				 bindtextdomain
+				 bind_textdomain_codeset
+				 bind_textdomain_filter
                  nl_putenv
-		 LC_CTYPE
-		 LC_NUMERIC
-		 LC_TIME
-		 LC_COLLATE
-		 LC_MONETARY
-		 LC_MESSAGES
-		 LC_ALL);
+				 LC_CTYPE
+				 LC_NUMERIC
+				 LC_TIME
+				 LC_COLLATE
+				 LC_MONETARY
+				 LC_MESSAGES
+				 LC_ALL);
 
 BEGIN {
 	my ($has_encode, $has_bytes);
@@ -96,29 +103,50 @@ BEGIN {
 		}
 	}
 
-	# Turn the UTF-8 flag off unconditionally.
+	# Turn the UTF-8 flag on or off unconditionally.  The prototypes
+	# allow an optional second parameter, so that you can use the
+	# functions as callbacks to bind_textdomain_filter.
 	if ($has_encode) {
 		eval <<'EOF';
-sub turn_utf_8_off($)
+sub turn_utf_8_on($;$)
+{
+	Encode::_utf8_on ($_[0]);
+	return $_[0];
+}
+
+sub turn_utf_8_off($;$)
 {
 	Encode::_utf8_off ($_[0]);
 	return $_[0];
 }
+
 EOF
 	} elsif ($has_bytes) {
 		eval <<'EOF';
-sub turn_utf_8_off($)
+sub turn_utf_8_on($;$)
+{
+	$_[0] = pack "U0C*", unpack "C*", $_[0];
+}
+
+sub turn_utf_8_off($;$)
 {
 	use bytes;
 	$_[0] = join "", split //, $_[0];
 }
+
 EOF
 	} else {
 		eval <<'EOF';
-sub turn_utf_8_off($)
+sub turn_utf_8_on($;$)
 {
 	return $_[0];
 }
+
+sub turn_utf_8_off($;$)
+{
+	return $_[0];
+}
+
 EOF
 	}
 }
@@ -127,7 +155,7 @@ sub select_package
 {
 	my ($class, $pkg) = @_;
 
-	if (defined $pkg && 'gettext_pp' eq $pkg) {
+	if (!$can_xs || (defined $pkg && 'gettext_pp' eq $pkg)) {
 		require Locale::gettext_pp;
 		$package = 'gettext_pp';
 	} else {
@@ -136,6 +164,15 @@ sub select_package
 	}
 
     return $package;
+}
+
+sub bind_textdomain_filter($;$$)
+{
+	my ($textdomain, $coderef, $data) = @_;
+
+	$filters{$textdomain} = [ $coderef, $data ];
+
+	return 1;
 }
 
 sub textdomain(;$)
@@ -161,44 +198,60 @@ sub bind_textdomain_codeset($;$)
 
 sub gettext($)
 {
-    turn_utf_8_off ('gettext_xs' eq $package ?
+	my $textdomain = textdomain;
+	$filters{$textdomain} ||= [ \&turn_utf_8_off ];
+	my $cb = $filters{$textdomain};
+
+    $cb->[0] ('gettext_xs' eq $package ?
 		     &Locale::gettext_xs::gettext :
-		     &Locale::gettext_pp::gettext);
+		     &Locale::gettext_pp::gettext, $cb->[1]);
 }
 
 sub dgettext($$)
 {
-    turn_utf_8_off ('gettext_xs' eq $package ?
+	my $cb = $filters{$_[0]} ||= [ \&turn_utf_8_off ];
+
+    $cb->[0] ('gettext_xs' eq $package ?
 		     &Locale::gettext_xs::dgettext :
-		     &Locale::gettext_pp::dgettext);
+		     &Locale::gettext_pp::dgettext, $cb->[1]);
 }
 
 sub dcgettext($$$)
 {
-    turn_utf_8_off ('gettext_xs' eq $package ?
+	my $cb = $filters{$_[0]} ||= [ \&turn_utf_8_off ];
+
+    $cb->[0] ('gettext_xs' eq $package ?
 		     &Locale::gettext_xs::dcgettext :
-		     &Locale::gettext_pp::dcgettext);
+		     &Locale::gettext_pp::dcgettext, $cb->[1]);
 }
 
 sub ngettext($$$)
 {
-    turn_utf_8_off ('gettext_xs' eq $package ?
+	my $textdomain = textdomain;
+	$filters{$textdomain} ||= [ \&turn_utf_8_off ];
+	my $cb = $filters{$textdomain};
+
+    $cb->[0] ('gettext_xs' eq $package ?
 		     &Locale::gettext_xs::ngettext :
-		     &Locale::gettext_pp::ngettext);
+		     &Locale::gettext_pp::ngettext, $cb->[1]);
 }
 
 sub dngettext($$$$)
 {
-    turn_utf_8_off ('gettext_xs' eq $package ?
+	my $cb = $filters{$_[0]} ||= [ \&turn_utf_8_off ];
+
+    $cb->[0] ('gettext_xs' eq $package ?
 		     &Locale::gettext_xs::dngettext :
-		     &Locale::gettext_pp::dngettext);
+		     &Locale::gettext_pp::dngettext, $cb->[1]);
 }
 
 sub dcngettext($$$$$)
 {
-    turn_utf_8_off ('gettext_xs' eq $package ?
+	my $cb = $filters{$_[0]} ||= [ \&turn_utf_8_off ];
+
+    $cb->[0] ('gettext_xs' eq $package ?
 		     &Locale::gettext_xs::dcngettext :
-		     &Locale::gettext_pp::dcngettext);
+		     &Locale::gettext_pp::dcngettext, $cb->[1]);
 }
 
 sub nl_putenv($)
@@ -278,6 +331,10 @@ Locale::Messages - Gettext Like Message Retrieval
  textdomain $textdomain;
  bindtextdomain $textdomain, $directory;
  bind_textdomain_codeset $textdomain, $encoding;
+ bind_textdomain_filter $textdomain, \&filter, $data;
+ turn_utf_8_on ($variable);
+ turn_utf_8_off ($variable);
+ nl_putenv ('OUTPUT_CHARSET=koi8-r');
  my $category = LC_CTYPE;
  my $category = LC_NUMERIC;
  my $category = LC_TIME;
@@ -321,10 +378,9 @@ If no translation can be found, the unmodified B<MSGID> is returned,
 i. e. the function can I<never> fail, and will I<never> mess up your
 original message.
 
-Note for Perl 5.8 and later: The returned string will I<always> have
-the UTF-8 flag off if the message has been touched, i. e. if it has
-been translated and if it has been converted to another charset.  It
-will be left untouched in all other cases.
+Note for Perl 5.6 and later: The returned string will I<always> have
+the UTF-8 flag off by default.  See the documentation for function
+bind_textdomain_filter() for a way to change this behavior.
 
 One common mistake is this:
 
@@ -363,8 +419,10 @@ opinion).
 See the description of the function C<__x()> in Locale::TextDomain(3)
 for a much better way to get around this problem.
 
+Non-ASCII message ids ...
+
 You should note that the function (and all other similar functions
-in this module) do a bytewise comparison of the B<MSGID> for the
+in this module) does a bytewise comparison of the B<MSGID> for the
 lookup in the translation catalog, no matter whether obscure utf-8
 flags are set on it, whether the string looks like utf-8, whether
 the utf8(3pm) pragma is used, or whatever other weird method past
@@ -381,17 +439,25 @@ itself will mess with the strings, and it will also be a guaranty
 that you can later translate your project into arbitrary target
 languages.
 
-Other character sets should theoretically work.  Using another
+Other character sets can theoretically work.  Yet, using another
 character set in the Perl source code than the one used in your
 message catalogs will B<never> work, since the lookup is done bytewise,
 and all strings with non-ascii characters will not be found.
 
-Again, I strongly recommend against using non-ascii character sets
-for the B<MSGID>s.  Even if things work perfectly alright on your
-machine, any user can mess things terribly up in completely 
-unpredictable ways, simply by changing or even not changing some
-locale settings.  This is not a flaw in libintl-perl or GNU gettext
-but in Perl, in the way it deals with Unicode.
+Even if you have solved all these problems, there is still one show
+stopper left: The gettext runtime API lacks a possibility to specify 
+the character set of the source code (including the original strings).
+Consequently - in absence of a hint for the input encoding - strings 
+without a translation are not subject to output character set conversion.
+In other words: If the (non-determinable) output character set differs
+from the character set used in the source code, output can be a
+mixture of two character sets.  There is no point in trying to address
+this problem in the pure Perl version of the gettext functions.  because
+breaking compatibilty between the Perl and the C version is a price too
+high to pay.
+
+This all boils down to: Only use ASCII characters in your translatable
+strings!
 
 =item B<dgettext TEXTDOMAIN, MSGID>
 
@@ -477,6 +543,60 @@ will be expected in F<./mylocale/fr_CH/LC_MESSAGES/my-package.mo>.
 
 Sets the output encoding for B<TEXTDOMAIN> to B<ENCODING>.  
 
+=item B<bind_textdomain_filter TEXTDOMAN, CODEREF, DATA>
+
+=item B<bind_textdomain_filter TEXTDOMAN, CODEREF>
+
+By default, Locale::Messages will turn the utf-8 flag of all returned
+messages off.  If you want to change this behavior, you can pass
+a reference to a subroutine that does different things - for example
+turn the utf-8 flag on, or leave it untouched.  The callback function 
+will be called with B<DATA> as the first, and the possibly 
+translated string as the second argument.  It should return the
+possibly modified string.
+
+If you want an object method to be called, pass the object itself
+in the data parameter and write a wrapper function.  Example:
+
+    sub wrapper { 
+        my ($string, $obj) = @_;
+ 
+        $obj->filterMethod ($string);
+    }
+    my $obj = MyPackage->new;
+
+    bind_textdomain_filter ('mydomain', \&wrapper, $obj);
+
+The function cannot fail and always returns a true value.
+
+B<Attention:> If you use the function for setting the utf-8 flag,
+it is B<your> responsability to ensure that the output is really
+utf-8.  You should only use it, if you have set the environment
+variable B<OUTPUT_CHARSET> to "utf-8".  Additionally you should
+call bind_textdomain_codeset() with "utf-8" as the second
+argument.
+
+This function has been introduced in libintl-perl 1.16 and it is
+B<not> part of the standard gettext API.
+
+=item B<turn_utf_8_on VARIABLE>
+
+Returns VARIABLE but with the UTF-8 flag (only known in Perl >=5.6)
+guaranteed to be turned on.  This function does not really fit into
+the module, but it is often handy nevertheless.
+
+The flag does B<not> mean that the string is in fact valid utf-8!
+
+The function was introduced with libintl-perl version 1.16.
+
+=item B<turn_utf_8_off VARIABLE>
+
+Returns VARIABLE but with the UTF-8 flag (only known in Perl >=5.6)
+guaranteed to be turned off.  This function does not really fit into
+the module, but it is often handy nevertheless.
+
+The function was introduced with libintl-perl version 1.07.
+
 =item B<select_package PACKAGE>
 
 By default, B<Locale::Messages> will try to load the XS version of
@@ -489,15 +609,8 @@ here, will prefer the pure Perl implementation.
 You will normally want to use that in a BEGIN block of your main
 script.
 
-The function was introduced with libintl-perl version 1.03.
-
-=item B<turn_utf_8_off VARIABLE>
-
-Returns VARIABLE but with the UTF-8 flag (only known in Perl >=5.6)
-guaranteed to be turned off.  This function does not really fit into
-the module, but it is often handy nevertheless.
-
-The function was introduced with libintl-perl version 1.07.
+The function was introduced with libintl-perl version 1.03 and is not
+part of the standard gettex API.
 
 =item B<nl_putenv ENVSPEC>
 
