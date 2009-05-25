@@ -1,10 +1,10 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: TextDomain.pm,v 1.34 2005/09/27 23:29:38 guido Exp $
+# $Id: TextDomain.pm,v 1.46 2009/05/25 14:29:08 guido Exp $
 
 # High-level interface to Perl i18n.
-# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -64,18 +64,20 @@ package Locale::TextDomain;
 
 use strict;
 
-use Locale::Messages qw (textdomain bindtextdomain dgettext dngettext);
+use Locale::Messages qw (textdomain bindtextdomain dgettext dngettext dpgettext dnpgettext);
+use Cwd qw (abs_path);
 
 use vars qw ($VERSION);
 
-$VERSION = '1.16';
+$VERSION = $Locale::Messages::VERSION;
 
 require Exporter;
 
 use vars qw (@ISA @EXPORT %__ $__);
 
 @ISA = ('Exporter');
-@EXPORT = qw (__ __x __n __nx __xn $__ %__ N__ N__n);
+@EXPORT = qw (__ __x __n __nx __xn __p __px __np __npx $__ %__ 
+              N__ N__n N__p N__np);
 
 my %textdomains = ();
 my %bound_dirs = ();
@@ -124,7 +126,14 @@ sub __tied_gettext ($$)
     my ($package) = caller (1);
     
     my $textdomain = $textdomains{$package};
-    
+    unless (defined $textdomain) {
+		my ($maybe_package, $filename, $line) = caller (2);
+		if (exists $textdomains{$maybe_package}) {
+			warn <<EOF;
+Probable use of \$__ or \%__ where __() should be used at $filename:$line.
+EOF
+		}
+	}
     __find_domain $textdomain if
 		defined $textdomain && defined $bound_dirs{$textdomain};
     
@@ -193,6 +202,68 @@ sub __xn ($@)
 					 %args);
 }
 
+# Context. (p is for particular or special)
+sub __p ($$)
+{
+    my $msgctxt = shift;
+    my $msgid = shift;
+	
+    my $package = caller;
+    
+    my $textdomain = $textdomains{$package};
+    
+    __find_domain $textdomain if 
+		defined $textdomain && defined $bound_dirs{$textdomain};
+    
+    return dpgettext $textdomain => $msgctxt, $msgid;
+}
+
+# With interpolation.
+sub __px ($$@)
+{
+    my ($msgctxt, $msgid, %vars) = @_;
+    
+    my $package = caller;
+    
+    my $textdomain = $textdomains{$package};
+    
+    __find_domain $textdomain if
+		defined $textdomain && defined $bound_dirs{$textdomain};
+    
+    return __expand ((dpgettext $textdomain => $msgctxt, $msgid), %vars);
+}
+
+# Context + Plural.
+sub __np ($$@)
+{
+    my ($msgctxt, $msgid, $msgid_plural, $count) = @_;
+    
+    my $package = caller;
+    
+    my $textdomain = $textdomains{$package};
+    
+    __find_domain $textdomain if
+		defined $textdomain && defined $bound_dirs{$textdomain};
+    
+    return dnpgettext $textdomain, $msgctxt, $msgid, $msgid_plural, $count;
+}
+
+# Plural with interpolation.
+sub __npx ($$@)
+{
+    my ($msgctxt, $msgid, $msgid_plural, $count, %args) = @_;
+    
+    my $package = caller;
+    
+    my $textdomain = $textdomains{$package};
+    
+    __find_domain $textdomain if
+		defined $textdomain && defined $bound_dirs{$textdomain};
+    
+    return __expand ((dnpgettext $textdomain, $msgctxt, $msgid, $msgid_plural, $count),
+					 %args);
+}
+
 # Dummy functions for string marking.
 sub N__
 {
@@ -201,6 +272,14 @@ sub N__
 
 sub N__n
 {
+    return @_;
+}
+
+sub N__p {
+    return @_;
+}
+
+sub N__np {
     return @_;
 }
 
@@ -223,7 +302,7 @@ sub import
     unless (exists $bound_dirs{$textdomain}) {
 		@search_dirs = map $_ . '/LocaleData', @INC, @default_dirs
 			unless @search_dirs;
-		$bound_dirs{$textdomain} = \@search_dirs;
+		$bound_dirs{$textdomain} = [@search_dirs];
     }
 	
     Locale::TextDomain->export_to_level (1, $package, @EXPORT);
@@ -241,7 +320,7 @@ sub __find_domain ($)
 	if (defined $try_dirs) {
 		my $found_dir = '';
 		
-		TRYDIR: foreach my $dir (@$try_dirs) {
+		TRYDIR: foreach my $dir (map { abs_path $_ } grep { -d $_ } @$try_dirs) {
 			# Is there a message catalog?  We have to search recursively
 			# for it.  Since globbing is reported to be buggy under
 			# MS-DOS, we roll our own version.
@@ -319,6 +398,21 @@ Locale::TextDomain - Perl Interface to Uniforum Message Translation
  print __nx ("one file read", "{num} files read", $num_files,
              num => $num_files);
 
+ my $translated_context = __p ("Verb, to view", "View");
+
+ printf (__np ("Files read from filesystems",
+               "one file read", 
+               "%d files read", 
+               $num_files),
+         $num_files);
+
+ print __npx ("Files read from filesystems",
+              "one file read", 
+              "{num} files read", 
+              $num_files,
+              num => $num_files);
+
+
 =head1 DESCRIPTION
 
 The module Locale::TextDomain(3pm) provides a high-level interface
@@ -326,7 +420,7 @@ to Perl message translation.
 
 =head2 Textdomains
 
-When your request a translation for a given string, the system used
+When you request a translation for a given string, the system used
 in libintl-perl follows a standard strategy to find a suitable message
 catalog containing the translation: Unless you explicitely define
 a name for the message catalog, libintl-perl will assume that your
@@ -364,7 +458,7 @@ up file names, you should avoid potential conflicts here.
 =item Textdomain Should Match CPAN Name
 
 If your software is listed as a module on CPAN, you should simply 
-choose the name on CPANS as your textdomain.  The textdomain for 
+choose the name on CPAN as your textdomain.  The textdomain for 
 libintl-perl is hence 'libintl-perl'.  But please replace all 
 periods ('.') in your package name with an underscore because ...
 
@@ -594,14 +688,14 @@ format for interpolatable strings:
     "This is the {color} {thing}.\n";
 
 Instead of Perl variables you use place-holders (legal Perl variables
-are also legal place-holders) in angle brackets, and then you call
+are also legal place-holders) in curly braces, and then you call
 
     print __x ("This is the {color} {thing}.\n", 
                thing => $thang,
                color => $color);
 
 The function __x() will take the additional hash and replace all
-occurencies of the hash keys in angle brackets with the corresponding
+occurencies of the hash keys in curly braces with the corresponding
 values.  Simple, readable, understandable to translators, what else
 would you want?  And if the translator forgets, misspells or otherwise
 messes up some "variables", the msgfmt(1) program, that is used to
@@ -672,6 +766,80 @@ hash.
 Does exactly the same thing as __nx().  In fact it is a common typo
 promoted to a feature.
 
+=item B<__p MSGCTXT, MSGID>
+
+This is much like __. The "p" stands for "particular", and the MSGCTXT 
+is used to provide context to the translator. This may be neccessary
+when your string is short, and could stand for multiple things. For example:
+
+    print __p"Verb, to view", "View";
+    print __p"Noun, a view", "View";
+
+The above may be "View" entries in a menu, where View->Source and File->View 
+are different forms of "View", and likely need to be translated differently.
+
+A typical usage are GUI programs.  Imagine a program with a main
+menu and the notorious "Open" entry in the "File" menu.  Now imagine,
+there is another menu entry Preferences->Advanced->Policy where you have 
+a choice between the alternatives "Open" and "Closed".  In English, "Open"
+is the adequate text at both places.  In other languages, it is very
+likely that you need two different translations.  Therefore, you would
+now write:
+
+    __p"File|", "Open";
+    __p"Preferences|Advanced|Policy", "Open";
+
+In English, or if no translation can be found, the second argument
+(MSGID) is returned.
+
+This function was introduced in libintl-perl 1.17.
+
+=item B<__px MSGCTXT, MSGID, VAR1 =E<gt> VAL1, VAR2 =E<gt> VAL2, ...>
+
+Like __p(), but supports variable substitution in the string, like __x().
+
+    print __px("Verb, to view", "View {file}", file => $filename);
+
+See __p() and __x() for more details.
+
+This function was introduced in libintl-perl 1.17.
+
+=item B<__np MSGCTXT, MSGID, MSGID_PLURAL, COUNT>
+
+This adds context to plural calls. It should not be needed very often,
+if at all, due to the __nx() function. The type of variable substitution
+used in other gettext libraries (using sprintf-like sybols, like %s or %1)
+sometimes required context. For a (bad) example of this:
+
+    printf (__np("[count] files have been deleted",
+                "One file has been deleted.\n",
+                "%s files have been deleted.\n",
+                $num_files),
+            $num_files);
+
+NOTE: The above usage is discouraged. Just use the __nx() call, which 
+provides inline context via the key names.
+
+This function was introduced in libintl-perl 1.17.
+
+=item B<__npx MSGCTXT, MSGID, MSGID_PLURAL, COUNT, VAR1 =E<gt> VAL1, VAR2 =E<gt> VAL2, ...>
+
+This is provided for comleteness. It adds the variable interpolation
+into the string to the previous method, __np().
+
+It's usage would be like so:
+
+    print __nx ("Files being permenantly removed",
+                "One file has been deleted.\n",
+                "{count} files have been deleted.\n",
+                $num_files,
+                count => $num_files);
+
+I cannot think of any situations requiring this, but we can easily 
+support it, so here it is.
+
+This function was introduced in libintl-perl 1.17.
+
 =item B<N__ (ARG1, ARG2, ...)>
 
 A no-op function that simply echoes its arguments to the caller.  Take
@@ -722,13 +890,21 @@ Now all the strings in C<@options> will be left alone, since N__()
 returns its arguments (one ore more) unmodified.  Nevertheless, the
 string extractor will be able to recognize the strings as being 
 translatable.  And you can still get the translation later by passing
-the variable instead of the string.
+the variable instead of the string to one of the above translation
+functions.
 
-=item B<N__n (ARG1, ...)>
+=item B<N__n (MSGID, MSGID_PLURAL, COUNT)>
 
 Does exactly the same as N__().  You will use this form if you have 
 to mark the strings as having plural forms.
 
+=item B<N__p (MSGCTXT, MSGID)
+
+Marks B<MSGID> as N__() does, but in the context B<MSGCTXT>.
+
+=item B<N__np (MSGCTXT, MSGID, MSGID_PLURAL, COUNT)
+
+Marks B<MSGID> as N__n() does, but in the context B<MSGCTXT>.
 =back
 
 =head1 EXPORTED VARIABLES
@@ -752,6 +928,21 @@ In the second case the HTML code will make it into the translation
 database and your translators have to be aware of HTML syntax when
 translating strings.
 
+B<Warning:> Do I<not> use this hash outside of double-quoted strings!
+The code in the tied hash object relies on the correct working of
+the function caller() (see "perldoc -f caller"), and this function
+will report incorrect results if the tied hash value is the argument
+to a function from another package, for example:
+
+  my $result = Other::Package::do_it ($__{'Some string'});
+
+The tied hash code will see "Other::Package" as the calling package,
+instead of your own package.  Consequently it will look up the message
+in the wrong text domain.  There is no workaround for this bug.
+Therefore:
+
+Never use the tied hash interpolated strings!
+
 =item B<$__>
 
 A reference to C<%__>, in case you prefer:
@@ -772,7 +963,7 @@ example:
     5: print __"Hello world!\n";
 
 This will usually be quite fast, but in pathological cases it may
-run for several seconds.  A worst-case scenario would look be a
+run for several seconds.  A worst-case scenario would be a
 Chinese user at a terminal that understands the codeset Big5-HKSCS.
 Your translator for Chinese has however chosen to encode the translations
 in the codeset EUC-TW.
@@ -838,7 +1029,7 @@ overhead for the function calls.
 
 =head1 AUTHOR
 
-Copyright (C) 2002-2004, Guido Flohr E<lt>guido@imperia.netE<gt>, all
+Copyright (C) 2002-2009, Guido Flohr E<lt>guido@imperia.netE<gt>, all
 rights reserved.  See the source code for details.
 
 This software is contributed to the Perl community by Imperia 

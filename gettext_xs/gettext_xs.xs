@@ -1,8 +1,8 @@
 /* -*- C -*- */
-/* $Id: gettext_xs.xs,v 1.9 2005/09/27 23:25:40 guido Exp $ */
+/* $Id: gettext_xs.xs,v 1.11 2009/05/25 14:29:08 guido Exp $ */
 /*
 # Perl binding for Uniforum message translation.
-# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -157,6 +157,57 @@ dcngettext (domainname, msgid1, msgid2, n, category)
 	RETVAL = (char*) dcngettext (domainname, msgid1, msgid2, n, category);
     OUTPUT:
 	RETVAL
+
+char*
+_pgettext_aux (domain, msg_ctxt_id, msgid, category)
+    char* domain
+    char* msg_ctxt_id
+    char* msgid
+    int category
+    PROTOTYPE: $$$$
+    PREINIT:
+    char* translation;
+    CODE:
+    /* Treat empty or undefined strings as NULL. */
+    if (!domain || domain[0] == '\000')
+        domain = NULL;
+    /* Treat -1 as null, and default to LC_MESSAGES */
+    if (category == -1)
+        category = LC_MESSAGES;
+    /* reimplemented from gettext-0.17 */
+    translation = (char*) dcgettext (domain, msg_ctxt_id, category);
+    if (translation == msg_ctxt_id)
+        RETVAL = msgid;
+    else
+        RETVAL = translation;
+    OUTPUT:
+    RETVAL
+
+char*
+_npgettext_aux (domain, msg_ctxt_id, msgid1, msgid2, n, category)
+    char* domain
+    char* msg_ctxt_id
+    char* msgid1
+    char* msgid2
+	unsigned long n
+    int category
+    PROTOTYPE: $$$$$$
+    PREINIT:
+    char* translation;
+    CODE:
+    /* Treat empty or undefined strings as NULL. */
+    if (!domain || domain[0] == '\000')
+        domain = NULL;
+    /* Treat -1 as null, and default to LC_MESSAGES */
+    if (category == -1)
+        category = LC_MESSAGES;
+    translation = (char*) dcngettext (domain, msg_ctxt_id, msgid2, n, category);
+    if (translation == msg_ctxt_id || translation == msgid2)
+        RETVAL = (n == 1 ? msgid1 : msgid2);
+    else
+        RETVAL = translation;
+    OUTPUT:
+    RETVAL
 
 # FIXME: The prototype should actually be ';$' but it doesn't work
 # as expected.  Passing no argument results in an error. 

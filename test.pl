@@ -1,10 +1,10 @@
 #! /usr/local/bin/perl -w
 
 # vim: tabstop=4
-# $Id: test.pl,v 1.6 2005/09/27 23:16:23 guido Exp $
+# $Id: test.pl,v 1.9 2009/05/25 14:54:37 guido Exp $
 
 # Portable character conversion for Perl.
-# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -39,6 +39,14 @@ local *DIR;
 opendir DIR, $test_dir or die "cannot open test directory '$test_dir': $!";
 @ARGV = sort map $test_dir . '/' . $_, grep /\.t$/, readdir DIR;
 closedir DIR;
+
+eval {
+	require Encode;
+};
+
+unless ($@) {
+    print "# Encode revision used is $Encode::VERSION.\n";
+}
 
 test_harness ($ENV{TEST_HARNESS} || 0, @lib_dirs);
 

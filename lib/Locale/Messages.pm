@@ -1,9 +1,9 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: Messages.pm,v 1.32 2005/09/27 23:29:38 guido Exp $
+# $Id: Messages.pm,v 1.39 2009/05/25 14:29:08 guido Exp $
 
-# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -25,7 +25,9 @@ package Locale::Messages;
 
 use strict;
 
-use vars qw ($package @EXPORT_OK %EXPORT_TAGS @ISA);
+use vars qw ($package @EXPORT_OK %EXPORT_TAGS @ISA $VERSION);
+
+$VERSION = '1.17';
 
 # Try to load the C version first.
 $package = 'gettext_xs';
@@ -33,7 +35,7 @@ my $can_xs = 1;
 eval <<'EOF';
 require Locale::gettext_xs; 
 my $version = Locale::gettext_xs::__gettext_xs_version();
-die "Version: $version mismatch (1.16 vs. $version)" unless $version eq '1.16';
+die "Version: $version mismatch (1.17 vs. $version)" unless $version eq '1.17';
 EOF
 if ($@) {
     $package = 'gettext_pp';
@@ -41,20 +43,24 @@ if ($@) {
     require Locale::gettext_pp;
 }
 		
-my %filters = ();
-
 require Exporter;
 @ISA = qw (Exporter);
-%EXPORT_TAGS = ( locale_h => [ qw (gettext
-				   dgettext
-				   dcgettext
-				   ngettext
-				   dngettext
-				   dcngettext
-				   textdomain
-				   bindtextdomain
-				   bind_textdomain_codeset
-				   )
+%EXPORT_TAGS = (locale_h => [ qw (gettext
+				  dgettext
+				  dcgettext
+				  ngettext
+				  dngettext
+				  dcngettext
+				  pgettext
+				  dpgettext
+				  dcpgettext
+				  npgettext
+				  dnpgettext
+				  dcnpgettext
+				  textdomain
+				  bindtextdomain
+				  bind_textdomain_codeset
+				  )
 			       ],
 		 libintl_h => [ qw (LC_CTYPE
 				    LC_NUMERIC
@@ -75,6 +81,12 @@ require Exporter;
 				 ngettext
 				 dngettext
 				 dcngettext
+				 pgettext
+				 dpgettext
+				 dcpgettext
+				 npgettext
+				 dnpgettext
+				 dcnpgettext
 				 textdomain
 				 bindtextdomain
 				 bind_textdomain_codeset
@@ -151,9 +163,20 @@ EOF
 	}
 }
 
+# The textdomain could be undef.  We avoid a warning by specifying
+# a filter for the undefined textdomain.
+my %filters = (
+			   undef => \&turn_utf_8_off,
+			   );
+
 sub select_package
 {
-	my ($class, $pkg) = @_;
+	my ($pkg, $compatibility) = @_;
+
+	# Compatibility quirk for a bug pre 1.17:
+	if (__PACKAGE__ eq $pkg && defined $compatibility) {
+		$pkg = $compatibility;
+	}
 
 	if (!$can_xs || (defined $pkg && 'gettext_pp' eq $pkg)) {
 		require Locale::gettext_pp;
@@ -254,6 +277,65 @@ sub dcngettext($$$$$)
 		     &Locale::gettext_pp::dcngettext, $cb->[1]);
 }
 
+###
+sub pgettext($$)
+{
+	my $textdomain = textdomain;
+	$filters{$textdomain} ||= [ \&turn_utf_8_off ];
+	my $cb = $filters{$textdomain};
+
+    $cb->[0] ('gettext_xs' eq $package ?
+		     &Locale::gettext_xs::pgettext :
+		     &Locale::gettext_pp::pgettext, $cb->[1]);
+}
+
+sub dpgettext($$$)
+{
+	my $cb = $filters{$_[0]} ||= [ \&turn_utf_8_off ];
+
+    $cb->[0] ('gettext_xs' eq $package ?
+		     &Locale::gettext_xs::dpgettext :
+		     &Locale::gettext_pp::dpgettext, $cb->[1]);
+}
+
+sub dcpgettext($$$$)
+{
+	my $cb = $filters{$_[0]} ||= [ \&turn_utf_8_off ];
+
+    $cb->[0] ('gettext_xs' eq $package ?
+		     &Locale::gettext_xs::dcpgettext :
+		     &Locale::gettext_pp::dcpgettext, $cb->[1]);
+}
+
+sub npgettext($$$$)
+{
+	my $textdomain = textdomain;
+	$filters{$textdomain} ||= [ \&turn_utf_8_off ];
+	my $cb = $filters{$textdomain};
+
+    $cb->[0] ('gettext_xs' eq $package ?
+		     &Locale::gettext_xs::npgettext :
+		     &Locale::gettext_pp::npgettext, $cb->[1]);
+}
+
+sub dnpgettext($$$$$)
+{
+	my $cb = $filters{$_[0]} ||= [ \&turn_utf_8_off ];
+
+    $cb->[0] ('gettext_xs' eq $package ?
+		     &Locale::gettext_xs::dnpgettext :
+		     &Locale::gettext_pp::dnpgettext, $cb->[1]);
+}
+
+sub dcnpgettext($$$$$$)
+{
+	my $cb = $filters{$_[0]} ||= [ \&turn_utf_8_off ];
+
+    $cb->[0] ('gettext_xs' eq $package ?
+		     &Locale::gettext_xs::dcnpgettext :
+		     &Locale::gettext_pp::dcnpgettext, $cb->[1]);
+}
+
 sub nl_putenv($)
 {
     'gettext_xs' eq $package ?
@@ -328,6 +410,12 @@ Locale::Messages - Gettext Like Message Retrieval
  ngettext $msgid, $msgid_plural, $count;
  dngettext $textdomain, $msgid, $msgid_plural, $count;
  dcngettext $textdomain, $msgid, $msgid_plural, $count, LC_MESSAGES;
+ pgettext $msgctxt, $msgid;
+ dpgettext $textdomain, $msgctxt, $msgid;
+ dcpgettext $textdomain, $msgctxt, $msgid, LC_MESSAGES;
+ npgettext $msgctxt, $msgid, $msgid_plural, $count;
+ dnpgettext $textdomain, $msgctxt, $msgid, $msgid_plural, $count;
+ dcnpgettext $textdomain, $msgctxt, $msgid, $msgid_plural, $count, LC_MESSAGES;
  textdomain $textdomain;
  bindtextdomain $textdomain, $directory;
  bind_textdomain_codeset $textdomain, $encoding;
@@ -525,6 +613,75 @@ textdomain instead of the default domain.
 Like dngettext() but retrieves the translation from the specified
 category, instead of the default category C<LC_MESSAGES>.
 
+=item B<pgettext MSGCTXT, MSGID>
+
+Returns the translation of MSGID, given the context of MSGCTXT.
+
+Both items are used as a unique key into the message catalog.
+
+This allows the translator to have two entries for words that may
+translate to different foreign words based on their context. For
+example, the word "View" may be a noun or a verb, which may be
+used in a menu as File->View or View->Source.
+
+    pgettext "Verb: To View", "View\n";
+    pgettext "Noun: A View", "View\n";
+
+The above will both lookup different entries in the message catalog.
+
+A typical usage are GUI programs.  Imagine a program with a main
+menu and the notorious "Open" entry in the "File" menu.  Now imagine,
+there is another menu entry Preferences->Advanced->Policy where you have 
+a choice between the alternatives "Open" and "Closed".  In English, "Open"
+is the adequate text at both places.  In other languages, it is very
+likely that you need two different translations.  Therefore, you would
+now write:
+
+    pgettext "File|", "Open";
+    pgettext "Preferences|Advanced|Policy", "Open";
+
+In English, or if no translation can be found, the second argument
+(MSGID) is returned.
+
+The function was introduced with libintl-perl version 1.17.
+
+=item B<dpgettext TEXTDOMAIN, MSGCTXT, MSGID>
+
+Like pgettext(), but retrieves the message for the specified 
+B<TEXTDOMAIN> instead of the default domain.
+
+The function was introduced with libintl-perl version 1.17.
+
+=item B<dcpgettext TEXTDOMAIN, MSGCTXT, MSGID, CATEGORY>
+
+Like dpgettext() but retrieves the message from the specified B<CATEGORY>
+instead of the default category C<LC_MESSAGES>.
+
+The function was introduced with libintl-perl version 1.17.
+
+=item B<npgettext MSGCTXT, MSGID, MSGID_PLURAL, COUNT>
+
+Like ngettext() with the addition of context as in pgettext().
+
+In English, or if no translation can be found, the second argument
+(MSGID) is picked if $count is one, the third one otherwise.
+
+The function was introduced with libintl-perl version 1.17.
+
+=item B<dnpgettext TEXTDOMAIN, MSGCTXT, MSGID, MSGID_PLURAL, COUNT>
+
+Like npgettext() but retrieves the translation from the specified
+textdomain instead of the default domain.
+
+The function was introduced with libintl-perl version 1.17.
+
+=item B<dcnpgettext TEXTDOMAIN, MSGCTXT, MSGID, MSGID_PLURAL, COUNT, CATEGORY>
+
+Like dnpgettext() but retrieves the translation from the specified
+category, instead of the default category C<LC_MESSAGES>.
+
+The function was introduced with libintl-perl version 1.17.
+
 =item B<textdomain TEXTDOMAIN>
 
 Sets the default textdomain (initially 'messages').
@@ -610,7 +767,7 @@ You will normally want to use that in a BEGIN block of your main
 script.
 
 The function was introduced with libintl-perl version 1.03 and is not
-part of the standard gettex API.
+part of the standard gettext API.
 
 =item B<nl_putenv ENVSPEC>
 
@@ -738,6 +895,18 @@ file F<locale.h>:
 
 =item B<dcngettext()>
 
+=item B<pgettext()>
+
+=item B<dpgettext()>
+
+=item B<dcpgettext()>
+
+=item B<npgettext()>
+
+=item B<dnpgettext()>
+
+=item B<dcnpgettext()>
+
 =item B<textdomain()>
 
 =item B<bindtextdomain()>
@@ -829,7 +998,7 @@ See Locale::TextDomain(3) for much simpler ways.
 
 =head1 AUTHOR
 
-Copyright (C) 2002-2004, Guido Flohr E<lt>guido@imperia.netE<gt>, all
+Copyright (C) 2002-2009, Guido Flohr E<lt>guido@imperia.netE<gt>, all
 rights reserved.  See the source code for details.
 
 This software is contributed to the Perl community by Imperia 

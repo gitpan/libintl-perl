@@ -1,10 +1,10 @@
 #! /usr/local/bin/perl -w
 
 # vim: tabstop=4
-# $Id: Makefile.PL,v 1.24 2005/08/31 23:23:24 guido Exp $
+# $Id: Makefile.PL,v 1.29 2009/05/25 15:02:23 guido Exp $
 
 # Makefile generator for libintl-perl.
-# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>, 
+# Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, 
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -199,7 +199,7 @@ close HANDLE or die "cannot close '$name': $!";
 
 WriteMakefile (
     NAME		    => 'libintl-perl',
-	VERSION_FROM	=> 'lib/Locale/TextDomain.pm',
+	VERSION_FROM	=> 'lib/Locale/Messages.pm',
     ($] >= 5.005 ?
 		(ABSTRACT	=> 'High-Level Interface to Uniforum Message Translation',
 	 	 AUTHOR		=> 'Guido Flohr <guido@imperia.net>',
@@ -208,10 +208,25 @@ WriteMakefile (
 	PREREQ_PM		=> { File::Spec => 0 },
 	PL_FILES        => {},
 	DIR		=> [$result == 0 ? ('gettext_xs') : ()],
+	clean			=> { FILES => 'xs_disabled build_xs' }
 	# If you want to build the XS version although the automatic detection
 	# suggests not to build it, uncomment the following line.
 	#DIR => [ ('gettext_xs') ],,
 );
+
+sub MY::postamble {
+        '
+all :: Credits ReleaseNotes
+
+# Make search.cpan.org happy but still follow GNU standards:
+# # (Thanks to Graham Barr for the hint)
+Credits: THANKS
+	cat THANKS >$@
+
+ReleaseNotes: NEWS
+	cat NEWS >$@
+'
+}
 
 __END__
 

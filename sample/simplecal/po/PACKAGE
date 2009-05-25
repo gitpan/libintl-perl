@@ -15,7 +15,6 @@ LINGUAS = de \
 	  nl \
 
 # Textdomain for our package.
-
 TEXTDOMAIN = org.imperia.simplecal
 
 # Initial copyright holder added to pot and po files.

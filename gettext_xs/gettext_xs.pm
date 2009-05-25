@@ -1,10 +1,10 @@
 #! /bin/false
 
 # vim: tabstop=4
-# $Id: gettext_xs.pm,v 1.6 2005/09/27 23:25:40 guido Exp $
+# $Id: gettext_xs.pm,v 1.9 2009/05/25 14:29:08 guido Exp $
 
 # Pure Perl implementation of Uniforum message translation.
-# Copyright (C) 2002-2004 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -39,6 +39,12 @@ use vars qw (%EXPORT_TAGS @EXPORT_OK @ISA);
 								  ngettext
 								  dngettext
 								  dcngettext
+								  pgettext
+								  dpgettext
+								  dcpgettext
+								  npgettext
+								  dnpgettext
+								  dcnpgettext
 								  textdomain
 								  bindtextdomain
 								  bind_textdomain_codeset
@@ -60,6 +66,12 @@ use vars qw (%EXPORT_TAGS @EXPORT_OK @ISA);
 				 ngettext
 				 dngettext
 				 dcngettext
+                 pgettext
+                 dpgettext
+                 dcpgettext
+                 npgettext
+                 dnpgettext
+                 dcnpgettext
 				 textdomain
 				 bindtextdomain
 				 bind_textdomain_codeset
@@ -76,6 +88,53 @@ use vars qw (%EXPORT_TAGS @EXPORT_OK @ISA);
 bootstrap Locale::gettext_xs;
 
 require File::Spec;
+require POSIX;
+
+# Reimplement pgettext functions
+sub pgettext ($$) {
+	my ($msgctxt, $msgid) = @_;
+
+	my $msg_ctxt_id = join("\004", $msgctxt, $msgid);
+	return Locale::gettext_xs::_pgettext_aux
+		("", $msg_ctxt_id, $msgid, &POSIX::LC_MESSAGES);
+}
+sub dpgettext ($$$) {
+	my ($domain, $msgctxt, $msgid) = @_;
+
+	my $msg_ctxt_id = join("\004", $msgctxt, $msgid);
+	return Locale::gettext_xs::_pgettext_aux
+		($domain, $msg_ctxt_id, $msgid, &POSIX::LC_MESSAGES);
+}
+sub dcpgettext ($$$$) {
+	my ($domain, $msgctxt, $msgid, $category) = @_;
+
+	my $msg_ctxt_id = join("\004", $msgctxt, $msgid);
+	return Locale::gettext_xs::_pgettext_aux
+		($domain, $msg_ctxt_id, $msgid, $category);
+}
+
+# Reimplement npgettext functions
+sub npgettext ($$$$) {
+	my ($msgctxt, $msgid1, $msgid2, $n) = @_;
+
+	my $msg_ctxt_id = join("\004", $msgctxt, $msgid1);
+	return Locale::gettext_xs::_npgettext_aux
+		("", $msg_ctxt_id, $msgid1, $msgid2, $n, &POSIX::LC_MESSAGES);
+}
+sub dnpgettext ($$$$$) {
+	my ($domain, $msgctxt, $msgid1, $msgid2, $n) = @_;
+
+	my $msg_ctxt_id = join("\004", $msgctxt, $msgid1);
+	return Locale::gettext_xs::_npgettext_aux
+		($domain, $msg_ctxt_id, $msgid1, $msgid2, $n, &POSIX::LC_MESSAGES);
+}
+sub dcnpgettext ($$$$$$) {
+	my ($domain, $msgctxt, $msgid1, $msgid2, $n, $category) = @_;
+
+	my $msg_ctxt_id = join("\004", $msgctxt, $msgid1);
+	return Locale::gettext_xs::_npgettext_aux
+		($domain, $msg_ctxt_id, $msgid1, $msgid2, $n, $category);
+}
 
 # Wrapper function that converts Perl paths to OS paths.
 sub bindtextdomain ($;$) {
