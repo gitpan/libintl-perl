@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: MACROMANIA.pm,v 1.9 2009/05/25 14:29:08 guido Exp $
+# $Id: 9fd073f5cbfb9d163a5b87ca4e172c49bed2b16a $
 
 # Conversion routines for MACROMANIA.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

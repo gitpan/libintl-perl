@@ -1,5 +1,5 @@
 /* -*- C -*- */
-/* $Id: gettext_xs.xs,v 1.11 2009/05/25 14:29:08 guido Exp $ */
+/* $Id: 4c4c113525aaf20088041b7dff4e1db078593770 $ */
 /*
 # Perl binding for Uniforum message translation.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,

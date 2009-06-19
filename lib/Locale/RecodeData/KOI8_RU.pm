@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: KOI8_RU.pm,v 1.9 2009/05/25 14:29:08 guido Exp $
+# $Id: 6bcafdace1ac0c24bccef06dbf2d0df73b3059ed $
 
 # Conversion routines for KOI8-RU.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

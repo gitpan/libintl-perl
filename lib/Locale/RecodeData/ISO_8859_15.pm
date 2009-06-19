@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: ISO_8859_15.pm,v 1.12 2009/05/25 14:29:08 guido Exp $
+# $Id: 6d838354b3ec297efe4e56803027919f6abb886c $
 
 # Conversion routines for ISO-8859-15.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

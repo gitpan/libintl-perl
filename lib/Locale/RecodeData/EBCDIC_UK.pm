@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: EBCDIC_UK.pm,v 1.12 2009/05/25 14:29:08 guido Exp $
+# $Id: db1b8925337c086d3de0ba8235f28cef3bbbc8a6 $
 
 # Conversion routines for EBCDIC-UK.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

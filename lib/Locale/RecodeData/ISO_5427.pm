@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: ISO_5427.pm,v 1.12 2009/05/25 14:29:08 guido Exp $
+# $Id: 71c84478552964f310ac8c56e1ecb26413ed8626 $
 
 # Conversion routines for ISO_5427.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

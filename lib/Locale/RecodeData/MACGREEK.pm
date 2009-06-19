@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: MACGREEK.pm,v 1.9 2009/05/25 14:29:08 guido Exp $
+# $Id: 17b1cf8998105b06c5c9575ff3986cb692daea63 $
 
 # Conversion routines for MACGREEK.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

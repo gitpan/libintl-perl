@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: MACUKRAINE.pm,v 1.9 2009/05/25 14:29:08 guido Exp $
+# $Id: b618c66d75a0eb954abc8f7a5866c367f655d236 $
 
 # Conversion routines for MACUKRAINE.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

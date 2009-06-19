@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: _Conversions.pm,v 1.19 2009/05/25 14:51:32 guido Exp $
+# $Id: cc9843b2ee56602f57d4f8edb7e3c30eb261a952 $
 
 # List of internally known conversions.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,

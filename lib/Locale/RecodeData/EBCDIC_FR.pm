@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: EBCDIC_FR.pm,v 1.12 2009/05/25 14:29:08 guido Exp $
+# $Id: 4eeb5ed51c5b14a4e3145702cdbac34a045ce9cf $
 
 # Conversion routines for EBCDIC-FR.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

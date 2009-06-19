@@ -22,9 +22,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
 # USA.
 
-# This module is based on work done by Phillip Vandry <vandry@Mlink.NET>,
-# done for Locale::gettext.
-
 package Locale::gettext_xs;
 
 require DynaLoader;
@@ -88,7 +85,6 @@ use vars qw (%EXPORT_TAGS @EXPORT_OK @ISA);
 bootstrap Locale::gettext_xs;
 
 require File::Spec;
-require POSIX;
 
 # Reimplement pgettext functions
 sub pgettext ($$) {
@@ -96,14 +92,14 @@ sub pgettext ($$) {
 
 	my $msg_ctxt_id = join("\004", $msgctxt, $msgid);
 	return Locale::gettext_xs::_pgettext_aux
-		("", $msg_ctxt_id, $msgid, &POSIX::LC_MESSAGES);
+		("", $msg_ctxt_id, $msgid, Locale::gettext_xs::LC_MESSAGES());
 }
 sub dpgettext ($$$) {
 	my ($domain, $msgctxt, $msgid) = @_;
 
 	my $msg_ctxt_id = join("\004", $msgctxt, $msgid);
 	return Locale::gettext_xs::_pgettext_aux
-		($domain, $msg_ctxt_id, $msgid, &POSIX::LC_MESSAGES);
+		($domain, $msg_ctxt_id, $msgid, Locale::gettext_xs::LC_MESSAGES());
 }
 sub dcpgettext ($$$$) {
 	my ($domain, $msgctxt, $msgid, $category) = @_;
@@ -119,14 +115,14 @@ sub npgettext ($$$$) {
 
 	my $msg_ctxt_id = join("\004", $msgctxt, $msgid1);
 	return Locale::gettext_xs::_npgettext_aux
-		("", $msg_ctxt_id, $msgid1, $msgid2, $n, &POSIX::LC_MESSAGES);
+		("", $msg_ctxt_id, $msgid1, $msgid2, $n, Locale::gettext_xs::LC_MESSAGES());
 }
 sub dnpgettext ($$$$$) {
 	my ($domain, $msgctxt, $msgid1, $msgid2, $n) = @_;
 
 	my $msg_ctxt_id = join("\004", $msgctxt, $msgid1);
 	return Locale::gettext_xs::_npgettext_aux
-		($domain, $msg_ctxt_id, $msgid1, $msgid2, $n, &POSIX::LC_MESSAGES);
+		($domain, $msg_ctxt_id, $msgid1, $msgid2, $n, Locale::gettext_xs::LC_MESSAGES());
 }
 sub dcnpgettext ($$$$$$) {
 	my ($domain, $msgctxt, $msgid1, $msgid2, $n, $category) = @_;

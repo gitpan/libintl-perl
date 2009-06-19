@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: VISCII.pm,v 1.12 2009/05/25 14:29:08 guido Exp $
+# $Id: db942fe32f93d30e7363cc86b9d7def1b7cd4532 $
 
 # Conversion routines for VISCII.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

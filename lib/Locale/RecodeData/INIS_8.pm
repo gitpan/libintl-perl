@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: INIS_8.pm,v 1.12 2009/05/25 14:29:08 guido Exp $
+# $Id: 8ce807ced20a59391245f155e73ca8314a06f9e7 $
 
 # Conversion routines for INIS-8.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

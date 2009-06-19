@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: SAMI_WS2.pm,v 1.12 2009/05/25 14:29:08 guido Exp $
+# $Id: 54592ee641ec4cbe956cc69296bd07c56ad6fb5a $
 
 # Conversion routines for WIN-SAMI-2.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

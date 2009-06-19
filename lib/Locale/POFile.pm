@@ -1,9 +1,9 @@
-#! /usr/local/bin/perl -w
+#! /bin/false
 
-# vim: tabstop=4
-# $Id: 3eeb4965ca9b85e4aa4afce6227bafd31b049dd9 $
+# vim: set autoindent shiftwidth=4 tabstop=4:
+# $Id: 264cc83f92dcd2b9d459ce913b4ff71cd49cd713 $
 
-# Portable character conversion for Perl.
+# This file is part of libintl-perl.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
@@ -22,55 +22,51 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
 # USA.
 
-# This is a safe wrapper for systems that lack a POSIX shell or have
-# a too low limit on the length of the command line.
+package Locale::POFile;
 
 use strict;
-use File::Basename;
-use Test::Harness;
-use File::Spec;
 
-sub test_harness;
-
-my $here = dirname ($0);
-my $test_dir = $here . '/tests';
-my @lib_dirs = ($here . '/blib/lib', $here . '/blib/arch');
-local *DIR;
-opendir DIR, $test_dir or die "cannot open test directory '$test_dir': $!";
-@ARGV = sort map $test_dir . '/' . $_, grep /\.t$/, readdir DIR;
-closedir DIR;
-
-eval {
-	require Encode;
-};
-
-unless ($@) {
-    print "# Encode revision used is $Encode::VERSION.\n";
-}
-
-test_harness ($ENV{TEST_HARNESS} || 0, @lib_dirs);
-
-sub test_harness
-{
-    $Test::Harness::verbose = shift;
-	
-    local @INC = @INC;
-    unshift @INC, map { File::Spec->rel2abs($_) } @_;
-	my $name = $0;
-	$name =~ s,test\.pl$,xs_disabled,;
-	local *HANDLE;
-	open HANDLE, "<$name" or die "cannot open '$name': $!";
-	my $xs_disabled = <HANDLE>;
-	if ($xs_disabled) {
-		Test::Harness::runtests (grep { ! /_xs.t$/ } sort 
-			{lc $a cmp lc $b } @ARGV);
-	} else {
-		Test::Harness::runtests (sort {lc $a cmp lc $b } @ARGV);
-	}
-}
+1;
 
 __END__
 
+=head1 NAME
+
+Locale::POFile - Manage Portable Object (PO) Files 
+
+=head1 SYNOPSIS
+
+ use Locale::POFile;
+
+=head1 DESCRIPTION
+
+The module Locale::POFile(3pm) provides an object-oriented interface
+to portable object (PO) files.  You can use it to read and write po
+files on disk or in memory.
+
+A Perl module with similar purpose is Locale::PO(3pm).  One of the
+main differences between Locale::PO(3pm) and Locale::POFile(3pm) is
+that the latter is able to grok with new po features like plural forms,
+message contexts and extended comment syntax.
+
+=head1 CONSTRUCTORS
+
+You can choose one of the following constructors to create a 
+Locale::POFile(3pm) instance.
+
+=head1 AUTHOR
+
+Copyright (C) 2002-2009, Guido Flohr E<lt>guido@imperia.netE<gt>, all
+rights reserved.  See the source code for details.
+
+This software is contributed to the Perl community by Imperia 
+(L<http://www.imperia.net/>).
+
+=head1 SEE ALSO
+
+xgettext(1), msgfmt(1), msgmerge(1), Locale::PO(3pm), perl(1)
+
+=cut
 Local Variables:
 mode: perl
 perl-indent-level: 4
@@ -83,4 +79,4 @@ cperl-indent-level: 4
 cperl-continued-statement-offset: 2
 tab-width: 4
 End:
-
+=cut

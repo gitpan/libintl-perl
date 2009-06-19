@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: GREEK_CCITT.pm,v 1.12 2009/05/25 14:29:08 guido Exp $
+# $Id: 0dd04c886a2c76e6e550007e9bc6076c017e48bd $
 
 # Conversion routines for GREEK-CCITT.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all
