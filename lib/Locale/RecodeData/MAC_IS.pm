@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 991546874ae1f3c0e0c4f419264abf549a10e410 $
+# $Id$
 
 # Conversion routines for MAC-IS.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

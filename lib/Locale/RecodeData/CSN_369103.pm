@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: b70d27b4f196011c7b1731474996732de48d410d $
+# $Id$
 
 # Conversion routines for CSN_369103.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

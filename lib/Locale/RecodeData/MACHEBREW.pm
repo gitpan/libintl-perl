@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: d997cff875325fba67f5503d5244615c91679fa2 $
+# $Id$
 
 # Conversion routines for MACHEBREW.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

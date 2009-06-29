@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 8f26325d3013469c3a87980940dba131c5df5c97 $
+# $Id$
 
 # Interface to Encode.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,

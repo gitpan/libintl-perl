@@ -1,7 +1,7 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: f446dfcb2841a4a1a7677074a0880793781ce10f $
+# $Id$
 
 # Portable character conversion for Perl.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,

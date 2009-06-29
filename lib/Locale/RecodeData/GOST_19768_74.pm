@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: d9d471486d39eca401162d9642491b3f1d658884 $
+# $Id$
 
 # Conversion routines for GOST_19768-74.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

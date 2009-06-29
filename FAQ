@@ -1,4 +1,4 @@
-$Id: 68bbab8bf9429846d9bc25820c8479148cb378b1 $
+$Id$
 
 The FAQ has been podified, see "perldoc Locale::libintlFAQ".  If you
 haven't installed libintl-perl and read this file in the source distribution,

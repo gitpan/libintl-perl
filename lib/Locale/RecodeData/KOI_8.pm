@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 3d7ce320a32c01d1f62823c587b6eab1487e705f $
+# $Id$
 
 # Conversion routines for KOI-8.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

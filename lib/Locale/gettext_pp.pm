@@ -1,7 +1,7 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: f3cac12ef65ba21201da0ad6ab75ef26dd7f0668 $
+# $Id$
 
 # Pure Perl implementation of Uniforum message translation.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,

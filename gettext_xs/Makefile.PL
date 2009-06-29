@@ -1,7 +1,7 @@
 #! /usr/local/bin/perl -w # -*- perl -*-
 
 # vim: tabstop=4
-# $Id: 251ef94762f83ee60aaaf1129f8c5dd02339b650 $
+# $Id$
 
 # Makefile generator for libintl-perl.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, 

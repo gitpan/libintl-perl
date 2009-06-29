@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: b54cc2b43f6d9e66338184fefdc45cc34e7a7004 $
+# $Id$
 
 # Conversion routines for DEC-MCS.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 5b11a4f7aea32cc766d9d2259331dd0ffeb02dc0 $
+# $Id$
 
 # Conversion routines for EBCDIC-IS-FRISS.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

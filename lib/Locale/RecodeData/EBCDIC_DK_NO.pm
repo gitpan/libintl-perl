@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: a7d317bb4af7609db21a18f65718888669ffb7ee $
+# $Id$
 
 # Conversion routines for EBCDIC-DK-NO.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

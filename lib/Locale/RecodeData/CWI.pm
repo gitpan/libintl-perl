@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 6216cc51e7b951172f1c6f64f03ee0cf0c9cca4d $
+# $Id$
 
 # Conversion routines for CWI.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

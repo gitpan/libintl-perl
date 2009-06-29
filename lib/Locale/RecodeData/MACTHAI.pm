@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: e4a7b52bd9578db7c00219bc776d5d5d27340766 $
+# $Id$
 
 # Conversion routines for MACTHAI.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

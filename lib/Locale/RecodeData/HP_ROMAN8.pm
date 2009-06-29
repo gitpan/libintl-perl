@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 0f4958ceff06846d11ad7c919d7614199718fc25 $
+# $Id$
 
 # Conversion routines for HP-ROMAN8.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

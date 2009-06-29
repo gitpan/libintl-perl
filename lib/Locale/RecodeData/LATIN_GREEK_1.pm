@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: f2aa9df64e4740d4b2e95e83e918fa7525a26083 $
+# $Id$
 
 # Conversion routines for LATIN-GREEK-1.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

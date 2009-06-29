@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 9b4b095199ad75922b27f24aeda12d6e7f0ada52 $
+# $Id$
 
 # Conversion routines for TIS-620.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

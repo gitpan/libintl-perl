@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: b07a7d6f43463d5c49dbf8741438bd570234b055 $
+# $Id$
 
 # Conversion routines for MACARABIC.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

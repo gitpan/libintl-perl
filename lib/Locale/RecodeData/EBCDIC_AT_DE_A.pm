@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 70fd9752d647b263ac863e6ea75ed7387fb4f931 $
+# $Id$
 
 # Conversion routines for EBCDIC-AT-DE-A.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

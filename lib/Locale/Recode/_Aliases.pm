@@ -1,7 +1,7 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: afc5f990506aa87910583c99169718cf672083e9 $
+# $Id$
 
 # Internally known aliases for charsets.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,

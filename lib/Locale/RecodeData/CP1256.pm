@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 9faf8b8091cefd942df9d7586541071cab6a5079 $
+# $Id$
 
 # Conversion routines for CP1256.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

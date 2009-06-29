@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 0906f31ae824330f99eb420c3fe2068157eb9a30 $
+# $Id$
 
 # Conversion routines for MACCYRILLIC.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 6d31860ae1669f135b50886a81a4ded4c0b4202c $
+# $Id$
 
 # Conversion routines for INIS-CYRILLIC.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

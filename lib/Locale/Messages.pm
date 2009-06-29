@@ -1,7 +1,7 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: eb90be7d71017183a5457a7c7e5b0eaed6675004 $
+# $Id$
 
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
@@ -27,7 +27,7 @@ use strict;
 
 use vars qw ($package @EXPORT_OK %EXPORT_TAGS @ISA $VERSION);
 
-$VERSION = '1.19';
+$VERSION = '1.20';
 
 # Try to load the C version first.
 $package = 'gettext_xs';
@@ -35,7 +35,7 @@ my $can_xs = 1;
 eval <<'EOF';
 require Locale::gettext_xs; 
 my $version = Locale::gettext_xs::__gettext_xs_version();
-die "Version: $version mismatch (1.19 vs. $version)" unless $version eq '1.19';
+die "Version: $version mismatch (1.20 vs. $version)" unless $version eq '1.20';
 EOF
 if ($@) {
     $package = 'gettext_pp';

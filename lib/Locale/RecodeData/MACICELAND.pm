@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 921ed5c29d7f7ed9bfe86965bb15d31a14688c37 $
+# $Id$
 
 # Conversion routines for MACICELAND.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

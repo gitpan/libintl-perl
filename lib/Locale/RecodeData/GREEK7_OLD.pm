@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 640deee03e6be1c12e87d39315cee5f771bee632 $
+# $Id$
 
 # Conversion routines for GREEK7-OLD.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

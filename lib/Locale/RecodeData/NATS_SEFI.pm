@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 5d91e9720efc447705183157829b5241dbedbd1d $
+# $Id$
 
 # Conversion routines for NATS-SEFI.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

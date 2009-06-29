@@ -1,5 +1,5 @@
 /* -*- C -*- */
-/* $Id: 4c4c113525aaf20088041b7dff4e1db078593770 $ */
+/* $Id: e3434ed8b7cc0733c92ccc0a876eef6f699b5d30 $ */
 /*
 # Perl binding for Uniforum message translation.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,

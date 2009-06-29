@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 13d40316970a4973515f0ae6e45976aa952bbe5c $
+# $Id$
 
 # Conversion routines for ECMA-CYRILLIC.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

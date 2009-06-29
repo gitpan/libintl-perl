@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 8c4b0092b9dcfdd203740ac548a8cbd4be66ce7b $
+# $Id$
 
 # Conversion routines for GEORGIAN-PS.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

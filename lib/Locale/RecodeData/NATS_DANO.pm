@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: cdbf65bf0511ba8e151b83c1e58f5f250a5767f9 $
+# $Id$
 
 # Conversion routines for NATS-DANO.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: bc0ffeb10b073cf9d7a01c3076fb8b42a4e342e1 $
+# $Id$
 
 # Conversion routines for IEC_P27-1.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

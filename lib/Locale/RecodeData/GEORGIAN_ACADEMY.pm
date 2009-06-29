@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 6aef55fd19937440516b0909e3e8857cb0061d67 $
+# $Id$
 
 # Conversion routines for GEORGIAN-ACADEMY.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

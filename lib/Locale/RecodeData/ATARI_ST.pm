@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: dde6baaf8a521b1d73780237bf999c720625484b $
+# $Id$
 
 # Conversion routines for ATARI-ST.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all

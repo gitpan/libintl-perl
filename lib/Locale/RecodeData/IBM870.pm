@@ -1,6 +1,6 @@
 #! /bin/false
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id: 19280a5416d73beedb6299d4e563f1b3aba3aea9 $
+# $Id$
 
 # Conversion routines for IBM870.
 # Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>, all
