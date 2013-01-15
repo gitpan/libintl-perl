@@ -1,10 +1,9 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id$
 
 # Pure Perl implementation of Uniforum message translation.
-# Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2013 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -181,6 +180,8 @@ my $has_nl_langinfo;
 sub __load_catalog;
 sub __load_domain;
 sub __locale_category;
+sub __untaint_plural_header;
+sub __compile_plural_function;
 
 sub LC_NUMERIC()
 {
@@ -474,6 +475,22 @@ sub nl_putenv ($)
 sub __load_domain
 {
 	my ($domainname, $category, $category_name) = @_;
+
+        # If no locale was selected for the requested locale category,
+        # l10n is disabled completely.  This matches the behavior of GNU
+        # gettext.
+        if ($category != LC_MESSAGES) {
+            # Not supported.
+            return [];
+        }
+        
+        my $locale;        
+        unless ($category == 1729) {
+                $locale = POSIX::setlocale ($category);
+                if (!defined $locale || 'C' eq $locale || 'POSIX' eq $locale) {
+                        return [];
+                }
+        }
 	
 	$domainname = $__gettext_pp_textdomain
 		unless defined $domainname && length $domainname;
@@ -488,8 +505,12 @@ sub __load_domain
 	if (defined $ENV{LANGUAGE} && length $ENV{LANGUAGE}) {
 		@locales = split /:/, $ENV{LANGUAGE};
 		$cache_key = $ENV{LANGUAGE};
+	} elsif (!defined $locale) {
+	        # The system does not have LC_MESSAGES.  Guess the value.
+		@locales = $cache_key = __locale_category ($category, 
+		                                           $category_name);
 	} else {
-		@locales = $cache_key = __locale_category ($category, $category_name);
+	        @locales = $cache_key = $locale;
 	}
 
 	# Have we looked that one up already?
@@ -675,42 +696,10 @@ sub __load_catalog
 	
 	# Untaint the plural header.
 	# Keep line breaks as is (Perl 5_005 compatibility).
-	if ($code =~ m{^($s*
-					 nplurals$s*=$s*[0-9]+
-					 $s*;$s*
-					 plural$s*=$s*(?:$s|[-\?\|\&=!<>+*/\%:;a-zA-Z0-9_\(\)])+
-					 )}xms) {
-		$domain->{po_header}->{plural_forms} = $1;
-	} else {
-		$domain->{po_header}->{plural_forms} = '';
-	}
-	
-	# Determine plural rules.
-	# The leading and trailing space is necessary to be able to match
-	# against word boundaries.
-	my $plural_func;
-	
-	if ($domain->{po_header}->{plural_forms}) {
-		my $code = ' ' . $domain->{po_header}->{plural_forms} . ' ';
-		$code =~ 
-			s/([^_a-zA-Z0-9]|\A)([_a-z][_A-Za-z0-9]*)([^_a-zA-Z0-9])/$1\$$2$3/g;
-		
-		$code = "sub { my \$n = shift; 
-				   my (\$plural, \$nplurals); 
-				   $code; 
-				   return (\$nplurals, \$plural ? \$plural : 0); }";
-		
-		# Now try to evaluate the code.	 There is no need to run the code in
-		# a Safe compartment.  The above substitutions should have destroyed
-		# all evil code.  Corrections are welcome!
-		$plural_func = eval $code;
-		undef $plural_func if $@;
-	}
-	
-	# Default is Germanic plural (which is incorrect for French).
-	$plural_func = eval "sub { (2, 1 != shift || 0) }" unless $plural_func;
-	
-	$domain->{plural_func} = $plural_func;
+    $code = $domain->{po_header}->{plural_forms} 
+        = __untaint_plural_header $code;
+
+	$domain->{plural_func} = __compile_plural_function $code;
 	
 	return $domain;
 }
@@ -731,7 +720,7 @@ sub __locale_category
 						  (?:\.[-_A-Za-z0-9]+)?
 						  )?
 						 (?:\@[-_A-Za-z0-9]+)?$/x);
-	
+
 	unless ($value) {
 		$value = $ENV{LC_ALL};
 		$value = $ENV{$category_name} unless defined $value && length $value;
@@ -776,6 +765,55 @@ sub __get_codeset
 	return;
 }
 	
+sub __untaint_plural_header {
+    my ($code) = @_;
+
+	# Whitespace, locale-independent.
+	my $s = '[ \t\r\n\013\014]';
+
+	if ($code =~ m{^($s*
+					 nplurals$s*=$s*[0-9]+
+					 $s*;$s*
+					 plural$s*=$s*(?:$s|[-\?\|\&=!<>+*/\%:;a-zA-Z0-9_\(\)])+
+					 )}xms) {
+		return $1;
+	}
+
+    return '';	
+}
+
+sub __compile_plural_function {
+    my ($code) = @_;
+
+	# The leading and trailing space is necessary to be able to match
+	# against word boundaries.
+	my $plural_func;
+	
+	if (length $code) {
+		my $code = ' ' . $code . ' ';
+		$code =~ 
+			s/(?<=[^_a-zA-Z0-9])[_a-z][_A-Za-z0-9]*(?=[^_a-zA-Z0-9])/\$$&/gs;
+		
+		$code = "sub { my \$n = shift || 0; 
+				   my (\$plural, \$nplurals); 
+				   $code; 
+				   return (\$nplurals, \$plural ? \$plural : 0); }";
+		
+		# Now try to evaluate the code.	 There is no need to run the code in
+		# a Safe compartment.  The above substitutions should have destroyed
+		# all evil code.  Corrections are welcome!
+        #warn $code;
+		$plural_func = eval $code;
+        #warn $@ if $@;
+		undef $plural_func if $@;
+	}
+    	
+	# Default is Germanic plural (which is incorrect for French).
+	$plural_func = eval "sub { (2, 1 != shift || 0) }" unless $plural_func;
+
+    return $plural_func;	
+}
+
 1;
 
 __END__
@@ -1004,7 +1042,7 @@ Imports the locale category constants:
 
 =head1 AUTHOR
 
-Copyright (C) 2002-2009, Guido Flohr E<lt>guido@imperia.netE<gt>, all
+Copyright (C) 2002-2013, Guido Flohr E<lt>guido@imperia.netE<gt>, all
 rights reserved.  See the source code for details.
 
 This software is contributed to the Perl community by Imperia 

@@ -1,9 +1,8 @@
 #! /bin/false
 
 # vim: set autoindent shiftwidth=4 tabstop=4:
-# $Id$
 
-# Copyright (C) 2002-2009 Guido Flohr <guido@imperia.net>,
+# Copyright (C) 2002-2013 Guido Flohr <guido@imperia.net>,
 # all rights reserved.
 
 # This program is free software; you can redistribute it and/or modify it
@@ -27,7 +26,7 @@ use strict;
 
 use vars qw ($package @EXPORT_OK %EXPORT_TAGS @ISA $VERSION);
 
-$VERSION = '1.20';
+$VERSION = '1.21';
 
 # Try to load the C version first.
 $package = 'gettext_xs';
@@ -35,7 +34,7 @@ my $can_xs = 1;
 eval <<'EOF';
 require Locale::gettext_xs; 
 my $version = Locale::gettext_xs::__gettext_xs_version();
-die "Version: $version mismatch (1.20 vs. $version)" unless $version eq '1.20';
+die "Version: version mismatch ($VERSION vs. $version)" unless $version eq $VERSION;
 EOF
 if ($@) {
     $package = 'gettext_pp';
@@ -494,7 +493,7 @@ target language.  Many C implementations of printf() allow to
 change the order of the arguments, and a French translator could
 then say:
 
-    "C'est le %$2s %$1s."
+    "C'est le %2$s %1$s."
 
 Perl printf() implements this feature as of version 5.8 or better.
 Consequently you can only use it, if you are sure that your software
@@ -998,7 +997,7 @@ See Locale::TextDomain(3) for much simpler ways.
 
 =head1 AUTHOR
 
-Copyright (C) 2002-2009, Guido Flohr E<lt>guido@imperia.netE<gt>, all
+Copyright (C) 2002-2013, Guido Flohr E<lt>guido@imperia.netE<gt>, all
 rights reserved.  See the source code for details.
 
 This software is contributed to the Perl community by Imperia 
